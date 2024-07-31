@@ -1,0 +1,99 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    {% if messages %}
+        <div class="col-md-6">
+            {% for message in messages %}
+                <div class="alert alert-success">
+                    <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="tim-icons icon-simple-remove"></i>
+                    </button>
+                    <span><b> <i class="fa fa-check"></i> {{ message|safe }}</b></span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+<div class="col-md-4">
+    <a id="cal-back" href=""><h3>Назад</h3></a>
+    <h4>Добавить пост в расписание</h4>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            {{ form.post }}
+        </div>
+        <div>
+            {{ form.schedule }}
+        </div>
+        <br/>
+        <input class="btn btn-primary" type="submit" value="Подтвердить">
+    </form>
+    <br/>
+    <h3>Посты на эту дату:</h3>
+    {% for sched in sch %}
+    <a class="cal-link" href="/schedule_update/{{ sched.id }}">
+        <div class="data">{{ sched.post }} - время: {{ sched.schedule.time }}|
+            {{ sched.schedule.date|linebreaksbr }}
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+<script>
+    let sch = document.getElementById('id_schedule')
+    let now = new Date();
+    let year = window.location.pathname.split('/')[2];
+    let month = String(window.location.pathname.split('/')[3]);
+    let day = window.location.pathname.split('/')[4];
+    let hour = String(now.getHours());
+    let minute = String(now.getMinutes() + 5);
+
+
+    if (hour.length == 1) {
+        hour = '0' + hour
+    }
+    if (month.length == 1) {
+        month = '0' + month
+    }
+    if (minute.length == 1) {
+        minute = '0' + minute
+    }
+    if (day.length == 1) {
+        day = '0' + day
+    }
+    sch.setAttribute('value', `${year}-${month}-${day}T${hour}:${minute}`)
+    const calBack = document.getElementById('cal-back')
+    calBack.setAttribute('href', `/calendar/${year}/${month}`)
+    // console.log(`${year}-${month}-${day}T${hour}:${minute}`)
+
+    data_ = document.getElementsByClassName('data')
+    for (let i = 0; i <= data_.length; i++) {
+        try {
+            if (data_[i].innerText.split('|')[1] !== ` ${year}-${month}-${day}`) {
+                data_[i].innerText = ''
+            } else {
+                data_[i].setAttribute('class', 'data badge badge-secondary')
+                data_[i].innerText = data_[i].innerText.split('|')[0]
+            }
+        } catch (e) {
+        }
+    }
+
+    try{
+        const postName = document.getElementById('id_post');
+        console.log(postName)
+        let post_name = window.location.search.split('=')[1].split('&')[0].replaceAll('%20', ' ');
+        post_name = decodeURI(post_name)
+        let post_id = window.location.search.split('=')[2];
+        console.log(post_id)
+        for (i = 0; i < postName.length; i++) {
+            try{
+            if (postName[i].getAttribute('value') === post_id){
+                postName[i].remove()
+                postName[0].setAttribute('value', post_id)
+                postName[0].innerHTML = post_name
+                }
+            }catch (error){}
+        }
+    }catch (error){}
+</script>
+{% endblock content %}

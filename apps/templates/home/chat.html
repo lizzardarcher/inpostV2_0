@@ -1,0 +1,98 @@
+{% extends "layouts/base.html" %}
+{% block title %} Посты {% endblock %}
+
+{% block content %}
+{% if messages %}
+<div class="col-md-6">
+    {% for message in messages %}
+    <div class="alert alert-success">
+        <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+            <i class="tim-icons icon-simple-remove"></i>
+        </button>
+        <span><b> <i class="fa fa-check"></i> {{ message }}</b></span>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+<h1> Мои Каналы </h1>
+<div class="p-2 m-1">
+    <a href="chat_create">
+        <button class="btn btn-primary">+ Добавить Канал</button>
+    </a>
+</div>
+
+<div class="col-12 col-sm-6">
+
+    <!-- Modal from bootstrap-->
+    <div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Сообщения не могут запоститься в этот канал</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    В приложении Telegram добавьте вашего телеграм-бота в этот канал или же передобавьте, удалив и добавив заново.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% for chat in chats %}
+    <div class="card card-chart">
+        <div class="card-header ">
+            <div class="row">
+                <div class="col-8 ">
+                    <h4 class="card-title">{{ chat.title }}</h4>
+                    <div class="card-title">{{ chat.bot }}
+                        {% if chat.chat_id%}<span class="badge badge-success">Активен</span>
+                        {% else %}<button class="badge btn-danger" data-toggle="modal" data-target="#exampleModalLong">Неактивен</button>
+                        {% endif %}
+                    </div>
+                    <div class=""><img class="img img-thumbnail" style="border-radius:50%;max-width:75px"
+                                       src="{{ chat.image }}">
+                    </div>
+                    <p class=""></p>
+                    <div class="small"><a href="{{ chat.ref }}">{{ chat.ref }}</a></div>
+                    <div class="card-text">Подписчиков: <span class="text-success">{{ chat.subscribers }}</span>
+                        <br/>
+                        {% if chat.positive_subs %}
+                        <span class="badge badge-success">+{{ chat.positive_subs }} сегодня</span>
+                        {% endif %}
+                        {% if chat.negative_subs %}
+                        <span class="badge badge-warning">-{{ chat.negative_subs }} сегодня</span>
+                        {% endif %}
+                    </div>
+
+                </div>
+                <div class="col-4">
+                    <a href="chat_update/{{ chat.id }}">
+                        <button class="btn btn-success text-dark text-center col-md-12 col-12">
+                            <i class="fa fa-edit"></i>
+                        </button>
+                    </a>
+
+                    <a href="chat_delete/{{ chat.id }}">
+                        <button class="btn btn-danger text-dark col-md-12 col-12"><i
+                                class="fa fa-trash"></i>
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock content %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+{% block javascripts %}{% endblock javascripts %}

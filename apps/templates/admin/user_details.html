@@ -1,0 +1,208 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Инфо пользователя {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+    {% if messages %}
+        <div class="col-md-6">
+            {% for message in messages %}
+                <div class="alert alert-success">
+                    <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                        <i class="tim-icons icon-simple-remove"></i>
+                    </button>
+                    <span><b> <i class="fa fa-check"></i> {{ message|safe }}</b></span>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<a class="btn btn-link" href="/admin_page"><h3>Назад</h3></a>
+
+{% for user in users %}
+{% if user.id|slugify == request.path|slice:"25:"|slugify %}
+    <div class="card card-body">
+        <h3 class="title">Пользователь: {{ user.username }}</h3>
+        <h3 class="title">Email: {{ user.email }}</h3>
+    </div>
+{% endif %}
+{% endfor %}
+
+    <!-- Боты -->
+
+<div class="card card-body">
+    <div class="table-responsive ps">
+        <table class="table tablesorter">
+            <h3>Боты</h3>
+            <a class="btn btn-info btn-simple" href="/admin_page/bot_create">+ Добавить бота</a>
+            <thead class="text-primary">
+            <tr class="tablesorter-headerRow">
+                <th>#</th>
+                <th>Название</th>
+                <th>Токен</th>
+                <th>Ссылка</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody aria-live="polite" aria-relevant="all">
+            {% for bot in bots %}
+            {% if bot.user_id|slugify == request.path|slice:"25:"|slugify %}
+            <tr role="row">
+                <td>
+                    {{ bot.id }}
+                </td>
+                <td>
+                    {{ bot.title }}
+                </td>
+                <td>
+                    {{ bot.token }}
+                </td>
+                <td>
+                    {{ bot.ref }}
+                </td>
+                <td class="text-right">
+                    <a href="/admin_page/bot_update/{{ bot.id }}"
+                       class="btn btn-link btn-warning btn-icon btn-sm edit"><i
+                            class="tim-icons icon-pencil"></i></a>
+                    <a href="/admin_page/bot_delete/{{ bot.id }}"
+                       class="btn btn-link btn-danger btn-icon btn-sm remove"><i
+                            class="tim-icons icon-simple-remove"></i></a>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <!-- Каналы -->
+
+<div class="card card-body">
+    <div class="table-responsive ps">
+        <table class="table">
+             <h3>Каналы</h3>
+             <a class="btn btn-info btn-simple" href="/admin_page/chat_create">+ Добавить канал</a>
+            <thead class="text-primary">
+            <tr class="tablesorter-headerRow">
+                <th>#</th>
+                <th>Image</th>
+                <th>ID чата</th>
+                <th>Тип</th>
+                <th>Название</th>
+                <th>Ссылка</th>
+                <th>Подписчики</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody aria-live="polite" aria-relevant="all">
+            {% for chat in chats %}
+            {% if chat.user_id|slugify == request.path|slice:"25:"|slugify %}
+            <tr role="row">
+                <td>{{ chat.id }}</td>
+                <td><img class="img img-thumbnail" style="border-radius:50%;max-width:75px" src="{{ chat.image }}"></td>
+                <td>{{ chat.chat_id }}</td>
+                <td>{{ chat.chat_type }}</td>
+                <td>{{ chat.title }}</td>
+                <td>{{ chat.ref }}</td>
+                <td>{{ chat.subscribers }}</td>
+                <td class="text-right">
+                    <a href="/admin_page/chat_update/{{ chat.id }}"
+                       class="btn btn-link btn-warning btn-icon btn-sm edit"><i
+                            class="tim-icons icon-pencil"></i></a>
+                    <a href="/admin_page/chat_delete/{{ chat.id }}"
+                       class="btn btn-link btn-danger btn-icon btn-sm remove"><i
+                            class="tim-icons icon-simple-remove"></i></a>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+    <!-- Посты -->
+<div class="card card-body">
+    <div class="table-responsive ps">
+        <table class="table tablesorter">
+            <h3>Посты</h3>
+            <a class="btn btn-info btn-simple" href="/admin_page/post_create">+ Добавить Пост</a>
+            <thead class="text-primary">
+            <tr class="tablesorter-headerRow">
+                <th>#</th>
+                <th>Заголовок</th>
+                <th>Текст</th>
+                <th>Фото</th>
+                <th>Видео</th>
+                <th>Аудио</th>
+                <th>Документы</th>
+                <th>Шаблон</th>
+                <th>Ссылки</th>
+                <th>Действия</th>
+            </tr>
+            </thead>
+            <tbody aria-live="polite" aria-relevant="all">
+            {% for post in posts %}
+            {% if post.user_id|slugify == request.path|slice:"25:"|slugify %}
+            <tr role="row">
+                <td>{{ post.id }}</td>
+                <td>{{ post.name }}</td>
+                <td>{{ post.text|safe }}</td>
+                <td>
+                    {% if post.photo_1 %}<img class="img img-thumbnail" style="border-radius:10%;max-width:100px"
+                                              src="{{ MEDIA_URL }}{{ post.photo_1 }}">{% endif %}
+                    {% if post.photo_2 %}<img class="img img-thumbnail" style="border-radius:10%;max-width:100px"
+                                              src="{{ MEDIA_URL }}{{ post.photo_2 }}">{% endif %}
+                    {% if post.photo_3 %}<img class="img img-thumbnail" style="border-radius:10%;max-width:100px"
+                                              src="{{ MEDIA_URL }}{{ post.photo_3 }}">{% endif %}
+                    {% if post.photo_4 %}<img class="img img-thumbnail" style="border-radius:10%;max-width:100px"
+                                              src="{{ MEDIA_URL }}{{ post.photo_4 }}">{% endif %}
+                    {% if post.photo_5 %}<img class="img img-thumbnail" style="border-radius:10%;max-width:100px"
+                                              src="{{ MEDIA_URL }}{{ post.photo_5 }}">{% endif %}
+                </td>
+
+                <td>{% if post.video != '' %}
+                    <video width="160" height="120" controls>
+                        <source src="{{ MEDIA_URL }}{{ post.video }}" type="video/mp4">
+                    </video>
+                    {% else %}No{% endif %}
+                </td>
+
+                <td>{% if post.music != '' %}{{ post.music }}
+                    <audio controls>
+                        <source src="{{ MEDIA_URL }}{{ post.music }}" type="audio/mpeg">
+                    </audio>
+                    {% else %}No{% endif %}
+                </td>
+                <td>{% if post.document != '' %}{{ post.document }}{% else %}No{% endif %}</td>
+                <td>{% if post.template_id != None %}{{ post.template_id }}{% else %}No{% endif %}</td>
+                <td>{% if post.url != None %}{{ post.url }}{% else %}No{% endif %}
+                    {% if post.url_text != None %}{{ post.url_text }}{% endif %}
+                </td>
+                <td class="text-right">
+                    <a href="/admin_page/post_update/{{ post.id }}"
+                       class="btn btn-link btn-warning btn-icon btn-sm edit"><i
+                            class="tim-icons icon-pencil"></i></a>
+                    <a href="/admin_page/post_delete/{{ post.id }}"
+                       class="btn btn-link btn-danger btn-icon btn-sm remove"><i
+                            class="tim-icons icon-simple-remove"></i></a>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}
+<script>
+    _id = String(window.location.href).split("/")[5]
+    console.log(_id)
+</script>
+{% endblock javascripts %}

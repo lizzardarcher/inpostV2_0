@@ -1,0 +1,19 @@
+{% extends 'layouts/spam-base.html' %}
+{% block content %}
+    <body class="bg-light bg-gradient">
+        <div class=" col-12 col-md-8 mt-5">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <br/>
+                <button type="submit" class="btn btn-primary">Подтвердить</button>
+            </form>
+            <ol class="table mt-5">
+                {% for c in channel %}
+                    <li>{{ c.username }}</li>
+                {% endfor %}
+            </ol>
+        </div>
+
+    </body>
+{% endblock %}

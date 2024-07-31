@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="inpostV2_0" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="inpostV2_0">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/var/www/html/inpost" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>

@@ -1,0 +1,21 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<body class="bg-light bg-gradient">
+<div class="container">
+<div class=" col-12 col-md-8">
+    <a href="/admin_page" ><h3>Назад</h3></a>
+    <form method="post" >
+        {% csrf_token %}
+        <div class="form-control">{{ form.email|as_crispy_field }}</div><br/>
+        <div class="form-control">{{ form.first_name|as_crispy_field }}</div><br/>
+        <div class="form-control">{{ form.last_name|as_crispy_field }}</div><br/>
+        <div class="form">{{ form.is_active|as_crispy_field }}</div><br/>
+        <div class="form">{{ form.is_staff|as_crispy_field }}</div><br/>
+        <button type="submit" class="btn btn-primary">Подтвердить</button>
+    </form>
+</div>
+
+</div>
+</body>
+{% endblock %}

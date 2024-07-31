@@ -1,0 +1,33 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <body class="bg-light bg-gradient">
+    <div class="container col-12">
+        <a href="/post" class="text-black"><h3>Назад</h3></a>
+        <img id="image_load" class="img img-thumbnail" src="" width="250px" height="340px">
+        <form method="post" enctype="multipart/form-data">
+            {% load crispy_forms_tags %}
+            {% csrf_token %}
+            {{ form.photos }}
+            <button type="submit" class="btn btn-primary">Обновить</button>
+        </form>
+        <a id="delete" href="">
+            <button type="submit" class="btn btn-danger text-dark">Удалить</button>
+        </a>
+    </div>
+    </body>
+{% endblock content %}
+
+{% block javascripts %}
+    <script>
+        const _id = window.location.pathname.split('/')[2]
+        const del_btn = document.getElementById("delete")
+        del_btn.setAttribute("href", `/post_photo_delete/${_id}`)
+
+        const photo1 = document.querySelector('a[href*="/media"]').textContent
+        const photo = '/media/'.concat(photo1)
+        console.log(photo)
+        const image = document.getElementById('image_load')
+        image.setAttribute('src', photo)
+    </script>
+{% endblock javascripts %}

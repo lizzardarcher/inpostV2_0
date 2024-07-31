@@ -1,0 +1,375 @@
+{% extends 'layouts/base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block stylesheets %}
+<!-- Emoji CSS Area -->
+<link rel="stylesheet" href="/static/assets/css/emojionearea.css"/>
+{% endblock stylesheets %}
+
+{% block content %}
+<head>
+    {{ form.media }}
+</head>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="title">Создание поста</h3>
+            </div>
+            <div class="card-body">
+                {% load crispy_forms_tags %}
+                <form id="post_form" method="post" action="" enctype="multipart/form-data">
+
+                    <div class="row">
+                        {% csrf_token %}
+
+                        <!-- Заголовок -->
+                        <div class="col-md-12 px-md-3">
+                            <div class="form-group">
+                                <h4><b>Заголовок сообщения: </b><small>
+                                    <i type="button" class="fa fa-question" data-toggle="tooltip"
+                                       data-placement="top"
+                                       title="Необходим для более понятного добавления поста в расписание">
+                                    </i></small></h4>
+                                {{ form.name }}
+                            </div>
+                        </div>
+
+                        <!-- Текст -->
+                        <div class="col-lg-11 col-12">
+                            <div class="form-group">
+                                <h4><b>Текст сообщения:</b></h4>
+                                {{ form.text }}
+                            </div>
+                        </div>
+                        <p>&nbsp;</p>
+
+                        <!-- Шаблон -->
+                        <div class="col-md-12 px-md-3">
+                            <div class="form-group">
+                                <h4><b>Выберите шаблон для сообщения: </b><small>
+                                    <i type="button" class="fa fa-question" data-toggle="tooltip"
+                                       data-placement="top" title="Шаблон будет добавлен в конец сообщения">
+                                    </i></small></h4>
+                                {{ form.template }}
+                            </div>
+                        </div>
+
+                        <!-- Кнопки -->
+<!--                        <div class="col-md-12 px-md-3">-->
+<!--                            <div class="form-group">-->
+<!--                                <div class="collapse" id="collapseBtn">-->
+<!--                                    <div class="card card-body">-->
+<!--                                        <p class="badge badge-info">Можно добавить до четырех кнопок</p>-->
+<!--                                        <div class="row">-->
+<!--                                            <div class="col-6 col-lg-3">-->
+<!--                                                {{ form.btn_name_1 }}-->
+<!--                                            </div>-->
+<!--                                            <div class="col-6 col-lg-3">-->
+<!--                                                {{ form.btn_name_2 }}-->
+<!--                                            </div>-->
+<!--                                            <div class="col-6 col-lg-3">-->
+<!--                                                {{ form.btn_name_3 }}-->
+<!--                                            </div>-->
+<!--                                            <div class="col-6 col-lg-3">-->
+<!--                                                {{ form.btn_name_4 }}-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <p>-->
+<!--                                    <a class="btn btn-secondary" data-toggle="collapse" href="#collapseBtn"-->
+<!--                                       role="button"-->
+<!--                                       aria-expanded="false" aria-controls="collapseBtn">-->
+<!--                                            <span id="add-btn"-->
+<!--                                                  onclick="addReferenceHandler(add_btn, no_btn)">+ Кнопки</span>-->
+<!--                                        <span id="no-btn"-->
+<!--                                              onclick="addReferenceHandler(no_btn, add_btn)"-->
+<!--                                              style="display: none">- Кнопки</span>-->
+<!--                                    </a>-->
+<!--                                </p>-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <!-- Ссылки -->
+                        <div class="col-md-12 px-md-3">
+                            <div class="form-group">
+                                <p>
+                                    <a class="btn btn-secondary" data-toggle="collapse" href="#collapseReference"
+                                       role="button"
+                                       aria-expanded="false" aria-controls="collapseReference">
+                                            <span id="add-reference"
+                                                  onclick="addReferenceHandler(add_reference, no_reference)">+ Ссылки</span>
+                                        <span id="no-reference"
+                                              onclick="addReferenceHandler(no_reference, add_reference)"
+                                              style="display: none">- Ссылки</span>
+                                    </a>
+                                </p>
+                                <div class="collapse" id="collapseReference">
+                                    <div class="card card-body">
+                                        {{ form.url }}
+                                        {{ form.url_text }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Toggle-Collapse для Медиа Файлов -->
+                    <a class="btn btn-social" data-toggle="collapse" href="#collapseMedia" role="button"
+                       aria-expanded="false" aria-controls="collapseExample">
+                        + Редактировать Медиа Файлы
+                    </a><small>
+                    <i type="button" class="fa fa-question" data-toggle="tooltip"
+                       data-placement="top" title="Добавляйте к своему посту фото, видео, музыку и различные документы в т.ч. rar и zip файлы.
+                                                       Максимум 10 вложений в один пост">
+                    </i></small>
+
+                    <div class="collapse" id="collapseMedia">
+                        <div class="row">
+                            <div class="col-md-12 px-md-3">
+                                <a id="photoCollapse" class="btn btn-social" data-toggle="collapse"
+                                   href="#collapsePhoto" role="button"
+                                   aria-expanded="false" aria-controls="collapseExample">
+                                    Фото</a>
+                                <div class="collapse" id="collapsePhoto">
+                                    <div class="col-md-4 col-sm-4">
+                                        <h4 class="card-title">Фото 1</h4>
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                            <div class="fileinput-new thumbnail">
+                                                <img src="{{ MEDIA_URL }}{{ post.photo_1 }}" alt="...">
+                                            </div>
+                                                {{ form.photo_1 }}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <h4 class="card-title">Фото 2</h4>
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                            <div class="fileinput-new thumbnail">
+                                                <img src="{{ MEDIA_URL }}{{ post.photo_2 }}" alt="...">
+                                            </div>
+                                                {{ form.photo_2 }}
+    
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <h4 class="card-title">Фото 3</h4>
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                            <div class="fileinput-new thumbnail">
+                                                <img src="{{ MEDIA_URL }}{{ post.photo_3 }}" alt="...">
+                                            </div>
+                                                {{ form.photo_3 }}
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <h4 class="card-title">Фото 4</h4>
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                            <div class="fileinput-new thumbnail">
+                                                <img src="{{ MEDIA_URL }}{{ post.photo_4 }}" alt="...">
+                                            </div>
+                                                {{ form.photo_4 }}
+
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-4">
+                                        <h4 class="card-title">Фото 5</h4>
+                                        <div class="fileinput fileinput-new text-center" data-provides="fileinput">
+                                            <div class="fileinput-new thumbnail">
+                                                <img src="{{ MEDIA_URL }}{{ post.photo_5 }}" alt="...">
+                                            </div>
+                                                {{ form.photo_5 }}
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a id="videoCollapse" class="btn btn-social" data-toggle="collapse"
+                                   href="#collapseVideo" role="button"
+                                   aria-expanded="false" aria-controls="collapseExample">
+                                    Видео
+                                </a>
+                                <div class="collapse" id="collapseVideo">
+                                    <div class="row">
+                                        <div id="load_video"></div>
+                                        <div class="col-6 col-sm-6">
+                                            {{ form.video }}
+                                        </div>
+                                        <div class="col-3 col-sm-6" id="clear_video"><a
+                                                class="btn btn-danger btn-round ">
+                                            <i class="fa fa-times"></i></a></div>
+                                    </div>
+                                </div>
+
+                                <a id="MusicCollapse" class="btn btn-social" data-toggle="collapse"
+                                   href="#collapseMusic" role="button"
+                                   aria-expanded="false" aria-controls="collapseExample">
+                                    Музыка
+                                </a>
+                                <div class="collapse" id="collapseMusic">
+                                    <div class="row">
+                                        <div id="load_music"></div>
+                                        <div class="col-6 col-sm-6">
+                                            {{ form.music }}
+                                        </div>
+                                        <div class="col-3 col-sm-6" id="clear_music"><a
+                                                class="btn btn-danger btn-round ">
+                                            <i class="fa fa-times"></i></a></div>
+                                    </div>
+                                </div>
+
+                                <a id="docCollapse" class="btn btn-social" data-toggle="collapse"
+                                   href="#collapseDocs" role="button"
+                                   aria-expanded="false" aria-controls="collapseExample">
+                                    Документы
+                                </a>
+                                <div class="collapse" id="collapseDocs">
+                                    <div class="row">
+                                        <div id="load_document"></div>
+                                        <div class="col-6 col-sm-6">
+                                            {{ form.document }}
+                                        </div>
+                                        <div class="col-3 col-sm-6" id="clear_document"><a
+                                                class="btn btn-danger btn-round ">
+                                            <i class="fa fa-times"></i></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <button class="btn btn-primary" type="submit" name="submit">Подтвердить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div id="load"></div>
+        <div id="text_load"></div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block javascripts %}
+<script src="https://cdn.rawgit.com/yuku-t/jquery-textcomplete/v1.3.4/dist/jquery.textcomplete.js"></script>
+<script>
+
+    // Добавление emoji в text inputs
+    // $('[name*="text"]').emojioneArea()
+    $('[id*="id_btn_name"]').emojioneArea()
+
+    // Все inputs и  Buttons clear
+    const photo_inputs = document.querySelectorAll('input[name*="photo"]')
+    const clearBtns = document.querySelectorAll('div[id*="clear_photo"]')
+
+    const video_input = document.querySelector('input[name*="video"]')
+    const video_clear_btn = document.querySelector('div[id*="clear_video"]')
+
+    const music_input = document.querySelector('input[name*="music"]')
+    const music_clear_btn = document.querySelector('div[id*="clear_music"]')
+
+    const document_input = document.querySelector('input[name*="document"]')
+    const document_clear_btn = document.querySelector('div[id*="clear_document"]')
+
+
+    // Минусы и плюсы при сворачивании
+    const add_reference = document.getElementById('add-reference');
+    const add_btn = document.getElementById('add-btn');
+    const no_reference = document.getElementById('no-reference');
+    const no_btn = document.getElementById('no-btn');
+
+    // Свернуть-развернуть кнопки Buttons и Reference
+    function addReferenceHandler(span, span2) {
+        span.setAttribute('style', 'display: none')
+        span2.setAttribute('style', 'display: block')
+    }
+
+    const selectors = document.getElementsByTagName('select');
+    for (let i = 0; i <= selectors.length; i++) {
+        try {
+            selectors[i].setAttribute('class', 'rounded')
+        } catch (e) {
+        }
+    }
+
+    //
+    function photoInputHandler(inputs) {
+        for (let index = 0; index < inputs.length; ++index) {
+            const input = inputs[index];
+            input.addEventListener('change', (e) => {
+                let tgt = e.target || window.event.srcElement,
+                    files = tgt.files;
+
+                load.innerHTML = '';
+
+                if (files && files.length) {
+                    for (let i = 0; i < files.length; i++) {
+                        let $self = files[i],
+                            fr = new FileReader();
+                        fr.onload = function (e) {
+                            load.insertAdjacentHTML('beforeEnd', `<img class="img-thumbnail" width="150px" height="120px" src="${e.srcElement.result}"/>`);
+                        }
+                        fr.readAsDataURL(files[i]);
+                    }
+                }
+            });
+
+        }
+    }
+
+
+    // File input clear function
+    function clearInputFile(f) {
+        if (f.value) {
+            try {
+                f.value = '';
+            } catch (err) {
+            }
+            if (f.value) {
+                var form = document.createElement('form'), ref = f.nextSibling;
+                form.appendChild(f);
+                form.reset();
+                ref.parentNode.insertBefore(f, ref);
+            }
+        }
+    }
+
+    // Назначаем clear на кнопки
+    {
+        for (let index = 0; index < photo_inputs.length; ++index) {
+            try {
+                clearBtns[index].onclick = function () {
+                    clearInputFile(photo_inputs[index])
+                }
+            } catch (e) {
+            }
+        }
+
+        video_clear_btn.onclick = function () {
+            clearInputFile(video_input)
+        }
+        music_clear_btn.onclick = function () {
+            clearInputFile(music_input)
+        }
+        document_clear_btn.onclick = function () {
+            clearInputFile(document_input)
+        }
+    }
+
+    // Убрать кнопки Clear если Update
+    if (document.URL.includes('update')) {
+        for (let index = 0; index < clearBtns.length; ++index) {
+            clearBtns[index].setAttribute('style', 'display: none')
+        }
+        video_clear_btn.setAttribute('style', 'display: none')
+        music_clear_btn.setAttribute('style', 'display: none')
+        document_clear_btn.setAttribute('style', 'display: none')
+    }
+
+
+</script>
+{% endblock javascripts %}

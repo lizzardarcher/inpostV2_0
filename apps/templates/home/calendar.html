@@ -1,0 +1,103 @@
+{% extends 'layouts/base.html' %}
+
+{#<link href="/static/assets/css/calendar.css" rel="stylesheet"/>#}
+
+
+{% block content %}
+
+
+<div class="container col-12">
+
+    {% if messages %}
+    <div class="rounded alert alert-success col-md-6">
+        {% for message in messages %}
+        <p {% if message.tags %} class="{{ message.tags }}"{% endif %}><i
+                class="fa fa-check"></i> {{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Расписание постов</h2>
+    <table class="">
+        <tr>
+            <td><a id="back" href="" onmouseover="calendarBackBtn()">
+                <button class="button btn-primary rounded"><<<</button>
+            </a>
+            </td>
+            <td><a id="current" href="" onmouseover="calendarCurrentBtn()">
+                <button class="button btn-primary rounded">>> Сегодня <<</button>
+            </a>
+            </td>
+            <td><a id="forward" href="" onmouseover="calendarForwardBtn()">
+                <button class="button btn-primary rounded">>>></button>
+            </a>
+            </td>
+        </tr>
+    </table>
+    <div class="cal-max" style="display: block">
+        {{ cal|safe }}
+    </div>
+
+    <div class="cal-mini" style="display: none">
+        {{ cal_mini|safe }}
+    </div>
+</div>
+<style>
+    td:hover {
+        background-color: #381d32;
+    }
+
+    td {
+        background-color: #39203e;
+        vertical-align: top;
+        text-align: left;
+        padding: 5px;
+    }
+
+
+</style>
+
+<script>
+    function calendarBackBtn() {
+        let year = parseInt(window.location.pathname.split('/')[2])
+        let month = parseInt(window.location.pathname.split('/')[3]) - 1
+        if (month === 0) {
+            year = year - 1
+            month = 12
+        }
+        let back_btn = document.getElementById('back');
+        back_btn.setAttribute('href', `/calendar/${year}/${month}/`)
+    }
+
+    function calendarForwardBtn() {
+        let fyear = parseInt(window.location.pathname.split('/')[2])
+        let fmonth = parseInt(window.location.pathname.split('/')[3]) + 1
+        if (fmonth === 13) {
+            console.log(fmonth)
+            fyear = fyear + 1
+            fmonth = 1
+        }
+        let back_btn = document.getElementById('forward');
+        back_btn.setAttribute('href', `/calendar/${fyear}/${fmonth}/`)
+    }
+
+    function calendarCurrentBtn() {
+        let today = new Date();
+        let cmonth = String(today.getMonth() + 1).padStart(2, '0');
+        let cyear = today.getFullYear();
+        let back_btn = document.getElementById('current');
+        back_btn.setAttribute('href', `/calendar/${cyear}/${cmonth}/`)
+    }
+
+    if (window.innerWidth < 960) {
+        console.log(window.innerWidth)
+        const cal_max = document.querySelector('div[class="cal-max"]');
+        const cal_mini = document.querySelector('div[class="cal-mini"]');
+        cal_max.setAttribute('style', 'display: none');
+        cal_mini.setAttribute('style', 'display: block');
+    }
+
+
+</script>
+
+{% endblock content %}

@@ -1,0 +1,62 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page Blank {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-12">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Информация о продолении подписки и приобретения VIP статуса</h3>
+                </div>
+                <div class="card-body">
+                    <ul class="nav nav-pills nav-pills-info">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#link1">
+                                Подписка
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#link2">
+                                VIP
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#link3">
+                                Вопросы
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content tab-space">
+                        <div class="tab-pane active" id="link1">
+                            Продлить подписку вы можете связавшись с нашей поддержкой
+                            <br><br>
+                            <a href="https://t.me/spbsluvki" class="btn btn-info">Поддержка</a>
+                        </div>
+                        <div class="tab-pane" id="link2">
+                            Приобрести статус <span class="badge badge-warning">VIP</span> вы можете связавшись с нашей поддержкой
+                            <br><br>
+                            <a href="https://t.me/spbsluvki" class="btn btn-info">Поддержка</a>
+                        </div>
+                        <div class="tab-pane" id="link3">
+                            Задать вопрос о нашем продукте или сообщить о проблеме
+                            вы можете связавшись с нашей поддержкой
+                            <br><br>
+                            <a href="https://t.me/spbsluvki" class="btn btn-info">Поддержкa</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

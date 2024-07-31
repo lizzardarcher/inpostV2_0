@@ -1,0 +1,20 @@
+<ul class="nav nav-pills">
+  <li class="nav-item">
+    <a class="nav-link {% if 'account' in spm_segment %}active{% else %}{% endif %}" href="{% url "accs" %}">Аккаунты</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if 'chat' in spm_segment %}active{% else %}{% endif %}" href="/spm/chat">Чаты</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {% if 'stats' in spm_segment %}active{% else %}{% endif %}" href="/spm/statistics">Статистика</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link disabled" aria-disabled="true">LOGS</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link disabled" aria-disabled="true">INFO</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link disabled" aria-disabled="true">OTHER</a>
+  </li>
+</ul>

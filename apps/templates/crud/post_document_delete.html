@@ -1,0 +1,20 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+    <body class="bg-light bg-gradient">
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+            <h2>Удалить этот документ?</h2>
+            <button type="submit" class="btn btn-danger">Да</button>
+        </form>
+        <a id="back" href="">
+            <button class="btn btn-primary">Назад</button>
+        </a>
+    </div>
+    </body>
+    <script>
+        let _id = window.location.pathname.split('/')[2]
+        let del_btn = document.getElementById("back")
+        del_btn.setAttribute("href", `/post_document_update/${_id}`)
+    </script>
+{% endblock %}

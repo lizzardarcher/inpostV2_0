@@ -1,0 +1,92 @@
+{
+  "type": "module",
+  "dataset": {
+    "first_chat": {
+      "title": "Ссылки Точка Ру",
+      "data": [
+        80,
+        100,
+        70,
+        80,
+        120,
+        80,
+        10,
+        20,
+        40,
+        50,
+        170
+      ],
+      "labels": [
+        "JAN",
+        "FEB",
+        "MAR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC"
+      ]
+    },
+    "third_chat": {
+      "title": "Му хрю",
+      "data": [
+        80,
+        100,
+        70,
+        80,
+        120,
+        80,
+        10,
+        20,
+        40,
+        50,
+        170
+      ],
+      "labels": [
+        "JAN",
+        "FEB",
+        "MAR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC"
+      ]
+    },
+    "second_chat": {
+      "title": "Бе ме",
+      "data": [
+        80,
+        100,
+        70,
+        80,
+        120,
+        80,
+        10,
+        20,
+        40,
+        50,
+        170
+      ],
+      "labels": [
+        "JAN",
+        "FEB",
+        "MAR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC"
+      ]
+    }
+  }
+}

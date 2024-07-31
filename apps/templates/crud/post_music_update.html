@@ -1,0 +1,26 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <body class="bg-light bg-gradient">
+    <div class="container col-12">
+        <a href="/post" class="text-black"><h3>Назад</h3></a>
+        <form method="post" enctype="multipart/form-data">
+            {% load crispy_forms_tags %}
+            {% csrf_token %}
+            {{ form.music }}
+            <button type="submit" class="btn btn-primary">Обновить</button>
+        </form>
+        <a id="delete" href="">
+            <button type="submit" class="btn btn-danger text-dark">Удалить</button>
+        </a>
+    </div>
+    </body>
+{% endblock content %}
+
+{% block javascripts %}
+    <script>
+        let _id = window.location.pathname.split('/')[2]
+        let del_btn = document.getElementById("delete")
+        del_btn.setAttribute("href", `/post_music_delete/${_id}`)
+    </script>
+{% endblock javascripts %}

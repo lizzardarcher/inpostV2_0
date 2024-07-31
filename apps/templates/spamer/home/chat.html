@@ -1,0 +1,88 @@
+{% extends "layouts/spam-base.html" %}
+{% block title %} Аккаунты для рассылки {% endblock %}
+
+{% block content %}
+
+
+    <div class="p-2 m-1">
+        <h1> Мои Спам Чаты </h1>
+        <p></p>
+
+        <ul class="nav nav-pills nav-fill">
+            <li class="nav-item">
+                <a class="nav-link bg-primary text-dark" href="upload"><b>+ Добавить Чат</b></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link bg-success text-dark" href="upload_excel"><b>Загрузить Excel</b></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link bg-info text-dark" href="/spm/channel/create/"><b>+ Каналы для подписки</b></a>
+            </li>
+        </ul>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Добавлен</th>
+                <th scope="col">Название</th>
+                <th scope="col">Подписчиков</th>
+                <th scope="col">Задержка</th>
+                {#                <th scope="col">В БАНе</th>#}
+                <th scope="col">Emoji</th>
+                <th scope="col">Удаление сообщений</th>
+                <th scope="col">Активен</th>
+                <th scope="col">Коммент</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in chats %}
+                <tr>
+                    <td><a href="{{ c.id }}"><span class="badge badge-info"><i class="fa fa-bars"></i></span></a></td>
+                    <td>{{ c.datetime }}</td>
+                    <td>{{ c.title }}</td>
+                    <td>{{ c.subscribers }}</td>
+                    <td>{{ c.delay }}</td>
+                    {#                <td>{% if c.is_user_banned %}{{ c.is_user_banned }}{% else %}✅{% endif %}</td>#}
+                    <td>{% if c.is_emoji_allowed %}✅{% else %}❌{% endif %}</td>
+                    <td>{% if c.is_del_mes_available %}✅{% else %}❌{% endif %}</td>
+                    <td>{% if c.is_active %}✅{% else %}❌{% endif %}</td>
+                    <td>{{ c.comment }}</td>
+                    <td><a class="btn btn-warning" href="{{ c.id }}/update/"><i class="fa fa-edit"></i></a></td>
+{#                    <td><a href="{{ c.id }}/delete/"><i class="fa fa-trash"></i></a></td>#}
+                    <!-- Button trigger modal -->
+                    <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Modal{{ c.id }}">
+                        <i class="fa fa-trash"></i></a>
+                    </button></td>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="Modal{{ c.id }}" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title" id="exampleModalLabel">Удаление</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <i class="tim-icons icon-simple-remove"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Вы действительно хотите удалить чат *{{ c.title }}* из базы?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                                    <a class="btn-danger btn" href="{{ c.id }}/delete/">Подтвердить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock content %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+{% block javascripts %}{% endblock javascripts %}

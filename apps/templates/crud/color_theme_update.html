@@ -1,0 +1,20 @@
+{% extends 'layouts/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <body class="bg-light bg-gradient">
+    <div class="container">
+        <a href="/user_profile/{{request.user.id}}"><h3>Назад</h3></a>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row">
+                <div class="col-12 col-md-8">
+                    <label>Выберите Основной Цвет:</label><br/>
+                    {{ form.primary_color }}
+                </div>
+            </div>
+            <br/>
+            <button type="submit" class="btn btn-primary">Подтвердить</button>
+        </form>
+    </div>
+    </body>
+{% endblock %}

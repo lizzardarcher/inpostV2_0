@@ -1,0 +1,139 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Page User {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        {% if messages %}
+        <div class="col-md-6">
+            {% for message in messages %}
+            <div class="alert alert-success">
+                <button type="button" aria-hidden="true" class="close" data-dismiss="alert"
+                        aria-label="Close">
+                    <i class="tim-icons icon-simple-remove"></i>
+                </button>
+                <span><b> <i class="fa fa-check"></i> {{ message }}</b></span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <div class="card">
+            <div class="card-header">
+                <h5 class="title">Профиль</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="/user_profile/{{ request.user.id }}">
+                    {% csrf_token %}
+                    <div class="row">
+
+                        <div class="col-md-4 ">
+                            <div class="form-group">
+                                <label>Login</label>
+                                <input type="text" class="form-control" value="{{ request.user.username }}"
+                                       name="username">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 ">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email</label>
+                                <input type="email" class="form-control" value="{{ request.user.email }}"
+                                       name="email">
+                            </div>
+                        </div>
+                        <div class="col-md-4 ">
+                            <div class="form-group">
+                                <a href="{% if status_of_user %}/color_theme_update/{{ status_of_user.id }}
+                                {% else %}/color_theme_create{% endif %}" class="btn btn-fill btn-secondary">Изменить
+                                    основной цвет</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Имя</label>
+                                <input type="text" class="form-control" value="{{ request.user.first_name }}"
+                                       name="first_name">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Фамилия</label>
+                                <input type="text" class="form-control" value="{{ request.user.last_name }}"
+                                       name="last_name">
+                            </div>
+                        </div>
+                        <div class="col-md-6">Статус пользователя: <a href="/payment_info">{% if status_of_user.is_vip %}<span
+                                class="badge badge-warning border">VIP</span>
+                            {% else %}<span class="badge badge-light">Стандарт</span>{% endif %}</a></div>
+
+                        <div class="col-md-6">Срок подписки до: <a href="/payment_info">{{ status_of_user.exp_date }}</a></div>
+
+                        <div class="col-md-6">
+                            <a href="/users/password_change" class="btn btn-secondary ">Изменить пароль</a>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-fill btn-primary">Редактировать</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card card-user">
+            <div class="card-body">
+                <p class="card-text">
+                    <div class="author">
+                        <div class="block block-one"></div>
+                        <div class="block block-two"></div>
+                        <div class="block block-three"></div>
+                        <div class="block block-four"></div>
+                        <a href="javascript:void(0)">
+                            <img class="avatar" src="{{ MEDIA_URL }}/simple-user-icon-128x128.png"
+                                 alt="Bill Gates photo - when buys a Linux.">
+                            <h5 class="title">
+                                {{ request.user.username }}
+                            </h5>
+                        </a>
+                <p class="description">
+                    {{ request.user.email }}
+                </p>
+            </div>
+            </p>
+
+        </div>
+        <div class="card-footer">
+            <div class="button-container">
+
+                <a href="https://t.me/tg_post_app">
+                    <button class="btn btn-icon btn-round btn-social">
+                        <i class="fab fa-telegram-plane"></i>
+                    </button>
+                </a>
+
+                <a href="https://vk.com/tg_post_app">
+                    <button class="btn btn-icon btn-round btn-twitter">
+                        <i class="fab fa-vk"></i>
+                    </button>
+                </a>
+
+                <a href="https://whatsapp.com/tg_post_app">
+                    <button class="btn btn-icon btn-round btn-google">
+                        <i class="fab fa-whatsapp"></i>
+                    </button>
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

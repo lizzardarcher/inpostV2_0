@@ -1,0 +1,93 @@
+{% extends "layouts/base.html" %}
+{% block title %} Пост {{ post.name }} {% endblock %}
+{% block stylesheets %}
+<style type="text/css">
+    #preview {
+        background-image: url("{{ MEDIA_URL }}/tg-background.jpg");
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+
+<div class="col-md-6 col-12">
+    <a href="/post" class="text-black"><h3>Назад</h3></a>
+    <div id="preview" class="col-6">
+        <div class="row">
+            {% if post.photo_1 %}
+            <img class="img img-raised mt-1 ml-4 ml-lg-5 col-10 rounded" style="max-height: 13em" src="{{ MEDIA_URL }}/{{ post.photo_1 }}"/>
+            {% endif %}
+            {% if post.photo_2 %}
+            <img class="img img-raised mt-1 ml-4 ml-lg-5 col-10 rounded" style="max-height: 13em" src="{{ MEDIA_URL }}/{{ post.photo_2 }}"/>
+            {% endif %}
+            {% if post.photo_3 %}
+            <img class="img img-raised  ml-4 ml-lg-5 col-10 col-lg-3 rounded" style="max-height: 13em" src="{{ MEDIA_URL }}/{{ post.photo_3 }}"/>
+            {% endif %}
+            {% if post.photo_4 %}
+            <img class="img img-raised  ml-4 ml-lg-2 col-10 col-lg-3 rounded" style="max-height: 13em" src="{{ MEDIA_URL }}/{{ post.photo_4 }}"/>
+            {% endif %}
+            {% if post.photo_5 %}
+            <img class="img img-raised  ml-4 ml-lg-1 col-10 col-lg-3 rounded" style="max-height: 13em" src="{{ MEDIA_URL }}/{{ post.photo_5 }}"/>
+            {% endif %}
+        </div>
+        <br/>
+
+        {% if post.video %}
+        <div class="row">
+            <img class="img img-raised mt-1 ml-1 col-4 rounded" src="{{ MEDIA_URL }}/{{ post.video }}"/>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <div class="col-1"></div>
+            <div class="col-10 bg-dark rounded mb-2">
+                {{ post.text|safe }}
+                {% for template in templates|slice:":1" %}
+                    {% if template.id == post.template_id %}
+                            <div class="container rounded text-dark">
+                                <hr>
+                                {{ template.text|safe }}
+                            </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="col-1"></div>
+            <div class="col-10">
+                {% if post.url %}
+                <div class="ml-5 mt-1 text-center bg-dark opacity-8 rounded"
+                     style="width: 100%">
+                    <p>{{ post.url_text }}</p>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-12">
+                <div class="row">
+                    {% if post.btn_name_1 %}
+                    <div class="col-4 ml-5 mt-1 text-center bg-dark opacity-8 rounded">
+                        <p>{{ post.btn_name_1 }}</p>
+                    </div>
+                    {% endif %}
+                    {% if post.btn_name_2 %}
+                    <div class="col-4 ml-5 mt-1 text-center bg-dark opacity-8 rounded">
+                        <p>{{ post.btn_name_2 }}</p>
+                    </div>
+                    {% endif %}
+                    {% if post.btn_name_3 %}
+                    <div class="col-4 ml-5 mt-1 text-center bg-dark opacity-8 rounded">
+                        <p>{{ post.btn_name_3 }}</p>
+                    </div>
+                    {% endif %}
+                    {% if post.btn_name_4 %}
+                    <div class="col-4 ml-5 mt-1 text-center bg-dark opacity-8 rounded">
+                        <p>{{ post.btn_name_4 }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}{% endblock javascripts %}

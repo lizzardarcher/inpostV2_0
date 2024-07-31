@@ -1,0 +1,9 @@
+from .models import Notification, UserStatus
+
+
+def get_notifications(request):
+
+    return {
+        'notifications': Notification.objects.all()[:15],
+        'status_of_user': UserStatus.objects.filter(user_id=request.user.id)[0]
+            }

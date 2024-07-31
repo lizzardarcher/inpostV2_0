@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<body class="bg-light bg-gradient">
+<div class="container">
+    <a href="/post" class="text-black"><h3>Назад</h3></a>
+    <form method="post" >
+        <h3>Вы действительно хотите удалить пост?</h3>
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn btn-danger">Подтвердить</button>
+    </form>
+</div>
+</body>
+{% endblock %}

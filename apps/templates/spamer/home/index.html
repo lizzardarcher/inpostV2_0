@@ -1,0 +1,111 @@
+{% extends "layouts/spam-base.html" %}
+{% block title %} SPAMER {% endblock %}
+
+{% block content %}
+    <div class="row">
+        {#    Мини статистика    #}
+        <div class="col-lg-5 col-12">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="info-icon text-center icon-info">
+                                <i class="fa fa-rocket"></i>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="numbers">
+                                <p class="card-category">Аккаунты</p>
+                                <h3 class="card-title">40</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="stats">
+                        <i class="fa fa-check-circle"></i> Активных: 24
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 col-12">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="info-icon text-center icon-warning">
+                                <i class="tim-icons icon-chat-33"></i>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="numbers">
+                                <p class="card-category">Отправлено постов за сутки</p>
+                                <h3 class="card-title">1002</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="stats">
+                        <i class="tim-icons icon-chat-33"></i> С начала пользования: 123747
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 col-12">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="info-icon text-center icon-success">
+                                <i class="tim-icons tim-icons icon-chat-33"></i>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="numbers">
+                                <p class="card-category">Чатов</p>
+                                <h3 class="card-title">231</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="stats">
+                        <i class="fa fa-check-circle"></i> Активных: 202
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5 col-12">
+            <div class="card card-stats">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="info-icon text-center icon-danger">
+                                <i class="fa fa-phone"></i>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="numbers">
+                                <p class="card-category">Автоответчик</p>
+                                <h3 class="card-title">667</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <hr>
+                    <div class="stats">
+                        <i class="tim-icons icon-watch-time"></i> За последние сутки: 132
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+{% block javascripts %}{% endblock javascripts %}

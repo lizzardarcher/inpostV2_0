@@ -1,0 +1,35 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <h3>POSTS</h3>
+    {{ year }}.{{ month }}.{{ day }} 00:00
+
+    <label for="check_all">Отметить все</label>
+    <input id="check_all" type="checkbox" onclick="checkBoxAllChecked()">
+    <form method="update" action="/">
+        {% csrf_token %}
+            {{ posts.schedule|date:"Y-m-d\TH:i" }}
+            <p><input class="checkbox" type="checkbox">{{ posts.name }}</p>
+            <input type="number" value="{{ posts.id }}" name="id">
+            <p><input id="id_schedule" type="datetime-local" value="{{ posts.schedule|date:"Y-m-d\TH:i" }}" name="schedule"></p>
+        <input type="submit" value="Подтвердить">
+    </form>
+
+
+    <script type="text/javascript">
+        function checkBoxAllChecked() {
+            let check_all = document.getElementById('check_all');
+            let check_box = document.querySelectorAll('input[type="checkbox"]');
+            if (check_all.checked) {
+                check_box.forEach(item => item.checked = true)
+            } else {
+                check_box.forEach(item => item.checked = false)
+            }
+        }
+    </script>
+
+{% endblock content %}
+
+{% block javascripts %}
+
+{% endblock javascripts %}

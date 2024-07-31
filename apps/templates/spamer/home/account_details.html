@@ -1,0 +1,43 @@
+{% extends "layouts/spam-base.html" %}
+{% block title %} Аккаунты для рассылки {% endblock %}
+
+{% block content %}
+    <div class="card col-12 mt-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    <p class="card-text">Добавлен: {{ account.datetime }}</p>
+                    <h3 class="card-title">{{ account.first_name }} {{ account.last_name }}</h3>
+                    <p class="text-primary">Спам {% if account.is_spam_active %}Запущен ✅{% else %}Остановлен
+                        ❌{% endif %}</p>
+                    <img src="{{ MEDIA_URL }}{{ account.photo }}" class="img-thumbnail" alt="...">
+                    <p class="card-text">Тел: <code>{{ account.phone }}</code></p>
+                    <p class="card-text">ID: <code>{{ account.id_account }}</code></p>
+                    <p class="card-text">Api Id: <code>{{ account.api_id }}</code></p>
+                    <p class="card-text">Api Hash: <code>{{ account.api_hash }}</code></p>
+
+                </div>
+                <div class="col-5">
+                    <p class="card-text">Текст для рассылки по чатам:</p>
+                    {% if account.media %}
+                        <img src="{{ MEDIA_URL }}{{ account.media }}" class="img-thumbnail" alt="...">{% endif %}
+                    <p class="card-text"><code>{{ account.common_text }}</code></p>
+                    <p class="card-text">Текст автоответчика: (<span class="text-primary">автоответчик
+                        {% if account.is_auto_answering_active %}
+                            ✅{% else %}❌{% endif %}</span>)</p>
+                    <p class="card-text"><code>{{ account.auto_answering_text }}</code></p>
+                </div>
+                <div class="col-4">
+                    <p class="card-text">Задержка: <code>{{ account.delay }}</code> (мин.)</p>
+                    <p><a href="/spm/accs/{{ account.id_account }}/update/">Редактировать <i class="fa fa-edit"></i></a>
+                    </p>
+                    <p><a href="/spm/accs/{{ account.id_account }}/delete/">Удалить <i class="fa fa-trash"></i></a></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+{% block javascripts %}{% endblock javascripts %}

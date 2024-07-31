@@ -1,0 +1,41 @@
+{% extends "layouts/spam-base.html" %}
+{% block title %} Аккаунты для рассылки {% endblock %}
+
+{% block content %}
+    <div class="card col-12 mt-3">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-3">
+                    <p class="card-text">Добавлен: {{ chat.datetime }}</p>
+                    <p class="card-text">{% if chat.is_active %}Активен ✅{% else %}Неактивен ❌{% endif %}</p>
+                    {% if chat.image %}<img src="{{ chat.image }}" class="img-thumbnail" alt="...">{% endif %}
+                    {% if chat.data_image %}<img src="{{ chat.data_image }}" class="img-thumbnail" alt="...">{% endif %}
+                    <h4 class="card-title"><code>{{ chat.title }}</code></h4>
+                    <p class="card-text">Подписчиков: <code>{{ chat.subscribers }}</code></p>
+                    {#                    <p class="card-text">Username: <code>@{{ chat.username }}</code></p>#}
+                    <p class="card-text"><code><a href="{{ chat.link }}" target="_blank">{{ chat.link }}</a></code></p>
+
+                </div>
+                {#                <div class="col-5">#}
+                {#                    <p class="card-text">Текст для рассылки в этот чат:</p>#}
+                {#                    <p class="card-text"><code>{{ chat.text }}</code></p>#}
+                {#                </div>#}
+                <div class="col-4">
+                    <p class="card-text">Задержка: <code>{{ chat.delay }}</code> (мин.)</p>
+                    <p class="card-text">Разрешены emoji:
+                        {% if chat.is_emoji_allowed %}✅{% else %}❌{% endif %}</p>
+                    <p class="card-text">Удалять сообщения из чата перед отправкой нового:
+                        {% if chat.is_del_mes_available %}✅{% else %}❌{% endif %}</p>
+                    <p><a href="/spm/chat/{{ chat.id }}/update/">Редактировать <i class="fa fa-edit"></i></a>
+                    </p>
+                    <p><a href="/spm/chat/{{ chat.id }}/delete/">Удалить <i class="fa fa-trash"></i></a></p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="/spm/chat/" class="btn btn-primary">Назад</a>
+{% endblock content %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+{% block javascripts %}{% endblock javascripts %}

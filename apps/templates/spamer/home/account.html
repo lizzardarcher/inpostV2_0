@@ -22,7 +22,7 @@
                             ❌{% endif %}</span></p>
                         <p class="text-primary">Спам {% if acc.is_spam_active %}Запущен ✅{% else %}Остановлен
                             ❌{% endif %}</p>
-                        <p class="text-primary">Автоответчик {% if account.is_auto_answering_active %}
+                        <p class="text-primary">Автоответчик {% if acc.is_auto_answering_active %}
                             ✅{% else %}❌{% endif %}</p>
                         <p class="card-img"><img class="img-thumbnail" src="{{ MEDIA_URL }}{{ acc.photo }}"
                                                  alt="acc image"/></p>

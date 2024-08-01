@@ -29,7 +29,6 @@ class GeneralSettingsAdmin(admin.ModelAdmin):
     #         if "delete_selected" in actions:
     #             del actions["delete_selected"]
     #     return actions
-    fields = ('forward_lk', 'general_text', 'general_auto_answering', 'general_delay')
 
 
 class AccountAdmin(admin.ModelAdmin):

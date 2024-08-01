@@ -179,6 +179,8 @@ class MasterAccount(models.Model):
 
 
 class GeneralLogging(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='spamlog', null=True, blank=True,
+                             verbose_name='Пользователь')
     log_level = models.CharField(max_length=50, null=True, blank=True, choices=LOG_LEVEL,
                                  verbose_name='Уровень логгирования')
     message = models.TextField(max_length=4000, null=True, blank=True, verbose_name='Сообщение')
@@ -193,6 +195,8 @@ class GeneralLogging(models.Model):
 
 
 class AccountLogging(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='spamlogging', null=True, blank=True,
+                             verbose_name='Пользователь')
     log_level = models.CharField(max_length=50, null=True, blank=True, choices=LOG_LEVEL,
                                  verbose_name='Уровень логгирования')
     message = models.TextField(max_length=4000, null=True, blank=True, verbose_name='Сообщение')
@@ -232,11 +236,13 @@ class TGAdmin(models.Model):
 
 
 class GeneralSettings(models.Model):
-    forward_lk = models.CharField(max_length=100, null=True, blank=True, verbose_name='Пересыл в ЛС')
-    general_text = models.TextField(max_length=1024, null=True, blank=True, verbose_name='Общий Текст')
-    general_auto_answering = models.TextField(max_length=1024, null=True, blank=True, verbose_name='Общий автоответчик')
-    general_delay = models.IntegerField(default=0, null=True, blank=True,
-                                        verbose_name='Общая задержка отправки сообщения (в минутах)')
+    is_reload_spam_needed = models.BooleanField(default=False, null=True, blank=True,
+                                                verbose_name='Нужна ли перезагрузка спамера')
+    # forward_lk = models.CharField(max_length=100, null=True, blank=True, verbose_name='Пересыл в ЛС')
+    # general_text = models.TextField(max_length=1024, null=True, blank=True, verbose_name='Общий Текст')
+    # general_auto_answering = models.TextField(max_length=1024, null=True, blank=True, verbose_name='Общий автоответчик')
+    # general_delay = models.IntegerField(default=0, null=True, blank=True,
+    #                                     verbose_name='Общая задержка отправки сообщения (в минутах)')
 
     def __str__(self):
         return 'Общие настройки для всего бота'

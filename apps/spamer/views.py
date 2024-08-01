@@ -5,6 +5,7 @@ import requests
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
+from django.utils import timezone
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView)
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
@@ -19,8 +20,19 @@ class BaseSpamerView(LoginRequiredMixin, TemplateView):
     template_name = "spamer/home/index.html"
 
     def get_context_data(self, **kwargs):
+        today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        today_end = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
         context = super(BaseSpamerView, self).get_context_data(**kwargs)
-        context.update({'segment': 'spm'})
+        context.update({'segment': 'spm',
+                        'len_account': Account.objects.all().count(),
+                        'len_account_active': Account.objects.filter(status=True).count(),
+                        'len_chat': Chat.objects.all().count(),
+                        'len_chat_active': Chat.objects.filter(is_active=True).count(),
+                        'len_message': Message.objects.all().count(),
+                        'len_message_day': Message.objects.filter(datetime__gte=today_start,
+                                                                  datetime__lte=today_end).count(),
+                        'len_autoanswer': Client.objects.all().count(),
+                        })
         return context
 
 
@@ -109,6 +121,7 @@ class AccountUploadView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return context
 
     def form_valid(self, form):
+        GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
         form.instance.user = self.request.user
         return super().form_valid(form)
 
@@ -327,13 +340,18 @@ class ClientListView(LoginRequiredMixin, ListView):
 class AccountLoggingListView(LoginRequiredMixin, ListView):
     model = AccountLogging
     context_object_name = 'logging'
-    paginate_by = 100
+    paginate_by = 50
     template_name = 'spamer/home/logging.html'
 
     def get_context_data(self, **kwargs):
         context = super(AccountLoggingListView, self).get_context_data(**kwargs)
-        context.update({'segment': 'spm', 'spm_segment': 'logging'})
+        context.update({'segment': 'spm',
+                        'spm_segment': 'logging',
+                        })
         return context
+
+    def get_queryset(self):
+        return AccountLogging.objects.filter(user=self.request.user)
 
 
 class GeneralSettingsListView(LoginRequiredMixin, ListView):

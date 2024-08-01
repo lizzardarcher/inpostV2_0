@@ -16,7 +16,7 @@
                         <div class="col-7">
                             <div class="numbers">
                                 <p class="card-category">Аккаунты</p>
-                                <h3 class="card-title">40</h3>
+                                <h3 class="card-title">{{ len_account }}</h3>
                             </div>
                         </div>
                     </div>
@@ -24,7 +24,7 @@
                 <div class="card-footer">
                     <hr>
                     <div class="stats">
-                        <i class="fa fa-check-circle"></i> Активных: 24
+                        <i class="fa fa-check-circle"></i> Активных: {{ len_account_active }}
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                         <div class="col-7">
                             <div class="numbers">
                                 <p class="card-category">Отправлено постов за сутки</p>
-                                <h3 class="card-title">1002</h3>
+                                <h3 class="card-title">{{ len_message_day }}</h3>
                             </div>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
                 <div class="card-footer">
                     <hr>
                     <div class="stats">
-                        <i class="tim-icons icon-chat-33"></i> С начала пользования: 123747
+                        <i class="tim-icons icon-chat-33"></i> С начала пользования: {{ len_message }}
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                         <div class="col-7">
                             <div class="numbers">
                                 <p class="card-category">Чатов</p>
-                                <h3 class="card-title">231</h3>
+                                <h3 class="card-title">{{ len_chat }}</h3>
                             </div>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                 <div class="card-footer">
                     <hr>
                     <div class="stats">
-                        <i class="fa fa-check-circle"></i> Активных: 202
+                        <i class="fa fa-check-circle"></i> Активных: {{ len_chat_active }}
                     </div>
                 </div>
             </div>
@@ -91,7 +91,7 @@
                         <div class="col-7">
                             <div class="numbers">
                                 <p class="card-category">Автоответчик</p>
-                                <h3 class="card-title">667</h3>
+                                <h3 class="card-title">{{ len_autoanswer }}</h3>
                             </div>
                         </div>
                     </div>
@@ -99,7 +99,7 @@
                 <div class="card-footer">
                     <hr>
                     <div class="stats">
-                        <i class="tim-icons icon-watch-time"></i> За последние сутки: 132
+                        <i class="tim-icons icon-watch-time"></i> За последние сутки: {{ len_autoanswer }}
                     </div>
                 </div>
             </div>

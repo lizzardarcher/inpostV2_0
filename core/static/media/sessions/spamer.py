@@ -26,7 +26,7 @@ from apps.spamer.models import Account, AccountLogging, Message, Chat
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format='%(asctime)s %(levelname) -8s %(message)s',
-    level=logging.WARNING,
+    level=logging.INFO,
     datefmt='%Y.%m.%d %I:%M:%S',
     handlers=[
         logging.StreamHandler(stream=sys.stderr)
@@ -164,49 +164,49 @@ async def post_to_chats(acc_id):
                     chat_obj = Chat.objects.filter(id=chat.id)[0]
                     Message.objects.create(message_id=jsn['id'], account=account_obj,
                                            datetime=datetime.datetime.now(), chat=chat_obj)
-                    AccountLogging.objects.create(log_level='Info', account=acc,
+                    AccountLogging.objects.create(log_level='Info', account=acc, user=user,
                                                   message='MESSAGE SENT',
                                                   datetime=datetime.datetime.now(), chat=chat)
                 except Exception as e:
                     print(e)
                     if '401 USER_DEACTIVATED_BAN' in traceback.format_exc():
                         Account.objects.filter(id_account=acc_id).update(status=False)
-                        AccountLogging.objects.create(log_level='Fatal', account=acc,
+                        AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                                       message='401 USER_DEACTIVATED_BAN',
                                                       datetime=datetime.datetime.now(), chat=chat)
                     elif '400 USER_BANNED_IN_CHANNEL' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc,
+                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
                                                       message='400 USER_BANNED_IN_CHANNEL',
                                                       datetime=datetime.datetime.now(), chat=chat)
                         chat.is_user_banned.add(Account.objects.get(id_account=acc_id))
                     elif '403 CHAT_WRITE_FORBIDDEN' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc,
+                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
                                                       message='403 CHAT_WRITE_FORBIDDEN',
                                                       datetime=datetime.datetime.now(), chat=chat)
                     elif '403 CHAT_SEND_MEDIA_FORBIDDEN' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc,
+                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
                                                       message='403 CHAT_SEND_MEDIA_FORBIDDEN',
                                                       datetime=datetime.datetime.now(), chat=chat)
                     elif '420 SLOWMODE_WAIT_X' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc,
+                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
                                                       message='420 SLOWMODE_WAIT_X',
                                                       datetime=datetime.datetime.now(), chat=chat)
                     elif '403 CHAT_SEND_PLAIN_FORBIDDEN' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc,
+                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
                                                       message='403 CHAT_SEND_PLAIN_FORBIDDEN',
                                                       datetime=datetime.datetime.now(), chat=chat)
                     elif '400 TOPIC_CLOSED' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc,
+                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
                                                       message='400 TOPIC_CLOSED',
                                                       datetime=datetime.datetime.now(), chat=chat)
                     elif '420 FLOOD_WAIT_X' in traceback.format_exc():
                         sec = traceback.format_exc().split('A wait of')[-1].split('seconds')[0]
                         msg = f'Wait {sec} seconds'
-                        AccountLogging.objects.create(log_level='Warning', account=acc,
+                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
                                                       message=msg,
                                                       datetime=datetime.datetime.now(), chat=chat)
                     else:
-                        AccountLogging.objects.create(log_level='Fatal', account=acc,
+                        AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                                       message=f'UNKNOWN: {traceback.format_exc()}',
                                                       datetime=datetime.datetime.now(), chat=chat)
             await asyncio.sleep(0.01)

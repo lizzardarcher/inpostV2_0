@@ -1,9 +1,13 @@
-import asyncio
+from datetime import datetime
+from urllib.request import urlopen
 
+import requests
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView)
+from django.core.files import File
+from django.core.files.temp import NamedTemporaryFile
 
 from apps.spamer.models import (Account, Message, Client, AccountLogging, GeneralSettings, Chat, ChannelToSubscribe)
 from apps.spamer.forms import (AccountForm, ChatUploadForm, AccountUploadForm, ChatForm, ChannelToSubscribeForm)
@@ -71,6 +75,7 @@ class AccountUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         return context
 
     def form_valid(self, form):
+        form.instance.is_change_needed = True
         form.instance.user = self.request.user
         return super().form_valid(form)
 
@@ -176,7 +181,6 @@ class ChatUploadView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-
         # Парсим данные чата с помощью requests
 
         chat_data = get_chat_info(form.instance.link)
@@ -185,9 +189,13 @@ class ChatUploadView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
         form.instance.username = str(form.instance.link).split('/')[-1]
 
         if 'data:image' in chat_data[0]:
-            form.instance.image = chat_data[0]
-        else:
             form.instance.data_image = chat_data[0]
+        else:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(urlopen(chat_data[0]).read())
+            img_temp.flush()
+            form.instance.image = File(img_temp, name=f'chat_{str(datetime.now())}.jpg')
+
         return super().form_valid(form)
 
 

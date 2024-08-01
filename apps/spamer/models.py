@@ -29,7 +29,7 @@ class Account(models.Model):
 
     first_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Name')
     last_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Surname')
-    photo = models.ImageField(upload_to='', null=True, blank=True, verbose_name='Photo')
+    photo = models.ImageField(null=True, blank=True, verbose_name='Photo')
 
     status = models.BooleanField(default=True, verbose_name='Состояние')
     is_activated = models.BooleanField(default=False, null=True, blank=True, verbose_name='Активирован')
@@ -47,7 +47,7 @@ class Account(models.Model):
                                                    verbose_name='Автоответчик вкл/выкл')
     is_spam_active = models.BooleanField(default=False, null=True, blank=True, verbose_name='Спам вкл/выкл')
     is_spam_lk_active = models.BooleanField(default=False, null=True, blank=True, verbose_name='Спам по ЛС вкл/выкл')
-    delay = models.IntegerField(default=0, null=True, blank=True,
+    delay = models.IntegerField(default=5, null=True, blank=True,
                                 verbose_name='Задержка отправки сообщения (в минутах)')
     master_to_forward = models.CharField(max_length=100, null=True, blank=True,
                                          verbose_name='Кому пересылать сообщения')
@@ -59,27 +59,6 @@ class Account(models.Model):
         else:
             return '❌ @' + str(self.username).split('/')[-1]
 
-    # def save(self, *args, **kwargs):
-    #
-    #     with open('sw.txt', 'w') as f:
-    #         f.writelines(self.session.name)
-    #         # f.write(self.session.path)
-    #         # f.write(self.session.url)
-    #         # f.write(self.session.file)
-    #
-    #     session = PyrogramClient(self.session.name)
-    #
-    #     with session:
-    #         user = session.get_me()
-    #
-    #     # Update model fields with Pyrogram user data
-    #     self.first_name = user.first_name
-    #     self.last_name = user.last_name
-    #     self.id = user.id
-    #     self.username = user.username
-    #
-    #     # Call the original save method
-    #     super().save(*args, *kwargs)
 
     class Meta:
         db_table = 'account'

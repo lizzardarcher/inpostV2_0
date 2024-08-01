@@ -8,7 +8,7 @@
                 <div class="col-3">
                     <p class="card-text">Добавлен: {{ chat.datetime }}</p>
                     <p class="card-text">{% if chat.is_active %}Активен ✅{% else %}Неактивен ❌{% endif %}</p>
-                    {% if chat.image %}<img src="{{ chat.image }}" class="img-thumbnail" alt="...">{% endif %}
+                    {% if chat.image %}<img src="{{ MEDIA_URL }}{{ chat.image }}" class="img-thumbnail" alt="...">{% endif %}
                     {% if chat.data_image %}<img src="{{ chat.data_image }}" class="img-thumbnail" alt="...">{% endif %}
                     <h4 class="card-title"><code>{{ chat.title }}</code></h4>
                     <p class="card-text">Подписчиков: <code>{{ chat.subscribers }}</code></p>

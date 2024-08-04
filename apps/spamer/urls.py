@@ -11,10 +11,13 @@ urlpatterns = [
     path('accs/<int:pk>/', views.AccountDetailView.as_view(), name='acc detail'),
     path('accs/create/', views.AccountCreateView.as_view(), name='acc create'),
     path('accs/upload/', views.AccountUploadView.as_view(), name='acc upload'),
+    path('accs/spam_activate/', views.AccountUpdateView.account_spam_activate, name='acc spm activate'),
+    path('accs/spam_deactivate/', views.AccountUpdateView.account_spam_deactivate, name='acc spm deactivate'),
     # path('accs/sms_code/', views.AccountSMSHandlerView.as_view(), name='acc sms_code'),
     path('accs/<int:pk>/update/', views.AccountUpdateView.as_view(), name='acc edit'),
     # path('accs/<int:pk>/delete/', views.AccountDeleteView.as_view(), name='acc delete'),
     path('accs/<int:pk>/delete/', views.AccountDeleteView.as_view(), name='acc delete'),
+    path('accs/s_construct', views.BaseSpamerView.s_construct_download, name='download s_construct'),
 
     path('chat/', views.ChatListView.as_view(), name='chats'),
     path('chat/<int:pk>/', views.ChatDetailView.as_view(), name='chat detail'),

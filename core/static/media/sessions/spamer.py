@@ -87,7 +87,7 @@ async def post_to_chats(acc_id):
     while True:
 
         # Рандомная задержка старта спама от 1 до 30 сек.
-        # await asyncio.sleep(random.randint(a=1, b=30))
+        await asyncio.sleep(random.randint(a=1, b=30))
 
         # Получаем акк по id
         acc = Account.objects.filter(id_account=acc_id)[0]
@@ -98,7 +98,7 @@ async def post_to_chats(acc_id):
         logger.info(f'[List Chats] [{chats}]')
 
         acc_id = acc.id_account
-        session_name = acc.session.name.split('/')[-1].split('.')[0]
+        session_name = acc.session_for_chat.split('/')[-1].split('.')[0]
         user = acc.user
         logger.info(f'[Account ID] [{acc_id}] [Session name] [{session_name}] [USER] [{user}]')
 

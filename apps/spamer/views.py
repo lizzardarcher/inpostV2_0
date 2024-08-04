@@ -4,9 +4,11 @@ from urllib.request import urlopen
 import requests
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.utils import timezone
-from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView)
+from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View)
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 
@@ -35,6 +37,11 @@ class BaseSpamerView(LoginRequiredMixin, TemplateView):
                         })
         return context
 
+    @staticmethod
+    def s_construct_download(request):
+        messages.success(request, 'Download Started!')
+        return redirect('/media/s_construct.exe')
+
 
 class AccountListView(LoginRequiredMixin, ListView):
     model = Account
@@ -43,7 +50,9 @@ class AccountListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super(AccountListView, self).get_context_data(**kwargs)
-        context.update({'segment': 'spm', 'spm_segment': 'account'})
+        context.update({'segment': 'spm',
+                        'spm_segment': 'account',
+                        'spam_active': Account.objects.filter(is_spam_active=True).count(),})
         return context
 
 
@@ -90,6 +99,20 @@ class AccountUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         form.instance.is_change_needed = True
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+    @staticmethod
+    def account_spam_activate(request):
+        messages.success(request, 'Спам запущен 🔥🔥🔥')
+        Account.objects.filter(id_account__gt=0).update(is_spam_active=True)
+        GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
+        return redirect('/spm/accs')
+
+    @staticmethod
+    def account_spam_deactivate(request):
+        messages.warning(request, 'Спам остановлен 🛑')
+        Account.objects.filter(id_account__gt=0).update(is_spam_active=False)
+        GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
+        return redirect('/spm/accs')
 
 
 class AccountDeleteView(LoginRequiredMixin, DeleteView):

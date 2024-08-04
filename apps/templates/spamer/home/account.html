@@ -3,11 +3,30 @@
 
 {% block content %}
     <div class="p-2 mt-3">
-        <h1> Мои Аккаунты </h1>
+        {% if spam_active %}
+            <h4 class="p-3 bg-info col-4 rounded text-dark">Спам Запущен 🔥🔥🔥 (аккаунтов в работе {{ spam_active }})</h4>
+            {% else %}
+            <h4 class="p-3 bg-warning col-4 rounded text-dark">Спам Остановлен 🛑</h4>
+        {% endif %}
+        <div class="row">
+            <div class="col-12">
+                <h2 class="d-inline-block">Мои Аккаунты</h2>
+                <a href="upload" class="btn btn-primary btn-sm rounded-circle ms-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="32" fill="currentColor"
+                         class="bi bi-plus" viewBox="0 0 16 16">
+                        <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 .5-.5z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="btn-group">
+                <a class="btn btn-secondary" href="spam_activate"> Запустить Спам 🔥</a>
+                <a class="btn btn-secondary" href="spam_deactivate" > Остановить Спам 🛑</a>
+        </div>
         <p></p>
-        <a href="upload">
-            <button class="btn btn-primary">+ Добавить аккаунт</button>
-        </a>
+
+
     </div>
     <div class="row mt-3">
         {% for acc in accounts %}

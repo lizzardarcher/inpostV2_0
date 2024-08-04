@@ -9,7 +9,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'core.settings'
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 django.setup()
 
-from apps.spamer.models import Account
+from apps.spamer.models import Account, GeneralSettings
 
 directory_to_list = '/var/www/html/inpost/core/static/media/sessions'
 
@@ -46,6 +46,11 @@ while True:
             if account.session.name.split('/')[-1] == file:
 
                 if not account.is_activated:
+
+                    session_for_chat = file.replace('.', '_for_chat.')
+                    os.system(f"cp {file} {session_for_chat}")
+                    acc.update(session_for_chat=session_for_chat)
+
                     client = Client(name=file.split('.')[0])
                     with client:
                         # Получаем информацию о пользователе
@@ -68,7 +73,7 @@ while True:
                         user_id = user.id
                         username = user.username
                     acc.update(is_activated=True, first_name=first_name, last_name=last_name, username=username,
-                               id_account=user_id, photo=photo_file, )
+                               id_account=user_id, photo=photo_file, is_auto_answering_active=True)
                     acc.update(is_change_needed=False)
 
                     break
@@ -85,4 +90,6 @@ while True:
                     acc.update(is_change_needed=False)
                     break
 
+                sleep(5)
+                GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
     sleep(5)

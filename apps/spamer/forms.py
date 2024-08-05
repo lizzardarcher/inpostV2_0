@@ -67,9 +67,11 @@ class AccountForm(forms.ModelForm):
 class AccountUploadForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ['session', ]
+        fields = ['session', 'common_text', 'auto_answering_text', ]
         widgets = {
             'session': forms.FileInput(attrs={'class': 'form-control'}),
+            'common_text': forms.Textarea(attrs={'class': 'form-control'}),
+            'auto_answering_text': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
 

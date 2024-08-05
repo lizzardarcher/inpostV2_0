@@ -83,8 +83,8 @@ class ChatAdmin(admin.ModelAdmin):
 
 
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('datetime', 'username', 'first_name', 'last_name', 'phone',)
-    list_display_links = ('datetime', 'username', 'first_name', 'last_name', 'phone',)
+    list_display = ('datetime', 'username', 'first_name', 'last_name', 'phone', 'account')
+    list_display_links = ('datetime', 'username', 'first_name', 'last_name', 'phone', 'account')
 
 
 class MasterAccountAdmin(admin.ModelAdmin):

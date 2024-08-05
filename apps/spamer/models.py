@@ -60,7 +60,6 @@ class Account(models.Model):
         else:
             return '❌ @' + str(self.username).split('/')[-1]
 
-
     class Meta:
         db_table = 'account'
         verbose_name = 'Спам Аккаунт'
@@ -148,6 +147,8 @@ class Client(models.Model):
     first_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Фамилия')
     last_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Имя')
     phone = models.CharField(max_length=16, null=True, blank=True, verbose_name='Телефон')
+    account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='spmacc', null=True, blank=True,
+                                verbose_name='Account')
 
     def __str__(self):
         return '@' + str(self.username) + ' ' + str(self.user_id)
@@ -156,6 +157,7 @@ class Client(models.Model):
         db_table = 'client'
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
+        unique_together = (('user_id', 'account'),)
 
 
 class MasterAccount(models.Model):
@@ -239,6 +241,7 @@ class TGAdmin(models.Model):
 class GeneralSettings(models.Model):
     is_reload_spam_needed = models.BooleanField(default=False, null=True, blank=True,
                                                 verbose_name='Нужна ли перезагрузка спамера')
+
     # forward_lk = models.CharField(max_length=100, null=True, blank=True, verbose_name='Пересыл в ЛС')
     # general_text = models.TextField(max_length=1024, null=True, blank=True, verbose_name='Общий Текст')
     # general_auto_answering = models.TextField(max_length=1024, null=True, blank=True, verbose_name='Общий автоответчик')

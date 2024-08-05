@@ -94,7 +94,7 @@ async def post_to_chats(acc_id):
         logger.info(f'[Activating] [{acc}]')
 
         # Получаем все активные чаты
-        chats = Chat.objects.filter(is_active=True).order_by('?')
+        chats = Chat.objects.filter(is_active=True)
         logger.info(f'[List Chats] [{chats}]')
 
         acc_id = acc.id_account
@@ -111,104 +111,104 @@ async def post_to_chats(acc_id):
 
             # Проход по группам
             for chat in chats:
+                if chat.user == acc.user:
+                    chat_username = chat.username.split('/')[-1]
 
-                chat_username = chat.username.split('/')[-1]
+                    # Удаляем предыдущее сообщение, если дозволено
+                    if chat.is_del_mes_available:
+                        try:
+                            message = Message.objects.filter(chat=chat.id, account=acc_id, is_deleted=False).last()
+                            m_id = message.id
+                            message_to_delete = message.message_id
+                            await client.delete_messages(chat_username, message_to_delete)
+                            Message.objects.filter(id=m_id).update(is_deleted=True)
+                        except Exception as e:
+                            print(e)
 
-                # Удаляем предыдущее сообщение, если дозволено
-                if chat.is_del_mes_available:
+                    # Удаляем Emoji, если в чате они запрещены
+                    if not chat.is_emoji_allowed:
+                        import re
+                        emoji_pattern = re.compile("["
+                                                   u"\U0001F600-\U0001F64F"  # emoticons
+                                                   u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                                                   u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                                                   u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                                                   "]+", flags=re.UNICODE)
+                        text = emoji_pattern.sub(r'', text)  # no emoji
+
+                    # Присоединяемся к чату, если необходимо
+                    # if await check_if_joined(client, chat_username):
                     try:
-                        message = Message.objects.filter(chat=chat.id, account=acc_id, is_deleted=False).last()
-                        m_id = message.id
-                        message_to_delete = message.message_id
-                        await client.delete_messages(chat_username, message_to_delete)
-                        Message.objects.filter(id=m_id).update(is_deleted=True)
+                        logger.info(f'[Join chat] [{chat_username}] [TRY]')
+                        await client.join_chat(chat_id=chat_username)
+                        await client.archive_chats(chat_ids=chat_username)
+                        logger.info(f'[Join chat] [{chat_username}] [SUCCESS]')
+                        await asyncio.sleep(1.5)
                     except Exception as e:
                         print(e)
+                        await asyncio.sleep(4.1)
 
-                # Удаляем Emoji, если в чате они запрещены
-                if not chat.is_emoji_allowed:
-                    import re
-                    emoji_pattern = re.compile("["
-                                               u"\U0001F600-\U0001F64F"  # emoticons
-                                               u"\U0001F300-\U0001F5FF"  # symbols & pictographs
-                                               u"\U0001F680-\U0001F6FF"  # transport & map symbols
-                                               u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
-                                               "]+", flags=re.UNICODE)
-                    text = emoji_pattern.sub(r'', text)  # no emoji
+                    try:
+                        # Текст с уникальной сгенерированной строкой в конце
+                        text = acc.common_text + random_string(letter_count=6, digit_count=6)
 
-                # Присоединяемся к чату, если необходимо
-                # if await check_if_joined(client, chat_username):
-                try:
-                    logger.info(f'[Join chat] [{chat_username}] [TRY]')
-                    await client.join_chat(chat_id=chat_username)
-                    await client.archive_chats(chat_ids=chat_username)
-                    logger.info(f'[Join chat] [{chat_username}] [SUCCESS]')
-                    await asyncio.sleep(1.5)
-                except Exception as e:
-                    print(e)
-                    await asyncio.sleep(4.1)
+                        # Отправляем сообщение
+                        logger.info(f'[Send message] [{text}] [TRY]')
+                        res = await client.send_message(chat_id=chat_username, text=text, parse_mode=ParseMode.MARKDOWN)
+                        logger.info(f'[Send message] [{chat_username}] [SUCCESS]')
+                        jsn = json.loads(str(res))
+                        await asyncio.sleep(7.7)
 
-                try:
-                    # Текст с уникальной сгенерированной строкой в конце
-                    text = acc.common_text + random_string(letter_count=6, digit_count=6)
-
-                    # Отправляем сообщение
-                    logger.info(f'[Send message] [{text}] [TRY]')
-                    res = await client.send_message(chat_id=chat_username, text=text, parse_mode=ParseMode.MARKDOWN)
-                    logger.info(f'[Send message] [{chat_username}] [SUCCESS]')
-                    jsn = json.loads(str(res))
-                    await asyncio.sleep(7.7)
-
-                    # Записываем сообщение в базу
-                    account_obj = Account.objects.filter(id_account=jsn['from_user']['id'])[0]
-                    chat_obj = Chat.objects.filter(id=chat.id)[0]
-                    Message.objects.create(message_id=jsn['id'], account=account_obj,
-                                           datetime=datetime.datetime.now(), chat=chat_obj)
-                    AccountLogging.objects.create(log_level='Info', account=acc, user=user,
-                                                  message='MESSAGE SENT',
-                                                  datetime=datetime.datetime.now(), chat=chat)
-                except Exception as e:
-                    print(e)
-                    if '401 USER_DEACTIVATED_BAN' in traceback.format_exc():
-                        Account.objects.filter(id_account=acc_id).update(status=False)
-                        AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
-                                                      message='401 USER_DEACTIVATED_BAN',
+                        # Записываем сообщение в базу
+                        account_obj = Account.objects.filter(id_account=jsn['from_user']['id'])[0]
+                        chat_obj = Chat.objects.filter(id=chat.id)[0]
+                        Message.objects.create(message_id=jsn['id'], account=account_obj,
+                                               datetime=datetime.datetime.now(), chat=chat_obj)
+                        AccountLogging.objects.create(log_level='Info', account=acc, user=user,
+                                                      message='MESSAGE SENT',
                                                       datetime=datetime.datetime.now(), chat=chat)
-                    elif '400 USER_BANNED_IN_CHANNEL' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
-                                                      message='400 USER_BANNED_IN_CHANNEL',
-                                                      datetime=datetime.datetime.now(), chat=chat)
-                        chat.is_user_banned.add(Account.objects.get(id_account=acc_id))
-                    elif '403 CHAT_WRITE_FORBIDDEN' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
-                                                      message='403 CHAT_WRITE_FORBIDDEN',
-                                                      datetime=datetime.datetime.now(), chat=chat)
-                    elif '403 CHAT_SEND_MEDIA_FORBIDDEN' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
-                                                      message='403 CHAT_SEND_MEDIA_FORBIDDEN',
-                                                      datetime=datetime.datetime.now(), chat=chat)
-                    elif '420 SLOWMODE_WAIT_X' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
-                                                      message='420 SLOWMODE_WAIT_X',
-                                                      datetime=datetime.datetime.now(), chat=chat)
-                    elif '403 CHAT_SEND_PLAIN_FORBIDDEN' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
-                                                      message='403 CHAT_SEND_PLAIN_FORBIDDEN',
-                                                      datetime=datetime.datetime.now(), chat=chat)
-                    elif '400 TOPIC_CLOSED' in traceback.format_exc():
-                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
-                                                      message='400 TOPIC_CLOSED',
-                                                      datetime=datetime.datetime.now(), chat=chat)
-                    elif '420 FLOOD_WAIT_X' in traceback.format_exc():
-                        sec = traceback.format_exc().split('A wait of')[-1].split('seconds')[0]
-                        msg = f'Wait {sec} seconds'
-                        AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
-                                                      message=msg,
-                                                      datetime=datetime.datetime.now(), chat=chat)
-                    else:
-                        AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
-                                                      message=f'UNKNOWN: {traceback.format_exc()}',
-                                                      datetime=datetime.datetime.now(), chat=chat)
+                    except Exception as e:
+                        print(e)
+                        if '401 USER_DEACTIVATED_BAN' in traceback.format_exc():
+                            Account.objects.filter(id_account=acc_id).update(status=False)
+                            AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
+                                                          message='401 USER_DEACTIVATED_BAN',
+                                                          datetime=datetime.datetime.now(), chat=chat)
+                        elif '400 USER_BANNED_IN_CHANNEL' in traceback.format_exc():
+                            AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                          message='400 USER_BANNED_IN_CHANNEL',
+                                                          datetime=datetime.datetime.now(), chat=chat)
+                            chat.is_user_banned.add(Account.objects.get(id_account=acc_id))
+                        elif '403 CHAT_WRITE_FORBIDDEN' in traceback.format_exc():
+                            AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                          message='403 CHAT_WRITE_FORBIDDEN',
+                                                          datetime=datetime.datetime.now(), chat=chat)
+                        elif '403 CHAT_SEND_MEDIA_FORBIDDEN' in traceback.format_exc():
+                            AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                          message='403 CHAT_SEND_MEDIA_FORBIDDEN',
+                                                          datetime=datetime.datetime.now(), chat=chat)
+                        elif '420 SLOWMODE_WAIT_X' in traceback.format_exc():
+                            AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                          message='420 SLOWMODE_WAIT_X',
+                                                          datetime=datetime.datetime.now(), chat=chat)
+                        elif '403 CHAT_SEND_PLAIN_FORBIDDEN' in traceback.format_exc():
+                            AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                          message='403 CHAT_SEND_PLAIN_FORBIDDEN',
+                                                          datetime=datetime.datetime.now(), chat=chat)
+                        elif '400 TOPIC_CLOSED' in traceback.format_exc():
+                            AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                          message='400 TOPIC_CLOSED',
+                                                          datetime=datetime.datetime.now(), chat=chat)
+                        elif '420 FLOOD_WAIT_X' in traceback.format_exc():
+                            sec = traceback.format_exc().split('A wait of')[-1].split('seconds')[0]
+                            msg = f'Wait {sec} seconds'
+                            AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                          message=msg,
+                                                          datetime=datetime.datetime.now(), chat=chat)
+                        else:
+                            AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
+                                                          message=f'UNKNOWN: {traceback.format_exc()}',
+                                                          datetime=datetime.datetime.now(), chat=chat)
             await asyncio.sleep(0.01)
             await client.stop()
             await asyncio.sleep(acc.delay * 60)

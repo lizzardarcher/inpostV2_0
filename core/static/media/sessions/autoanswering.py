@@ -42,7 +42,8 @@ async def main():
     """ Активируем клиенты pyrogram с помощью compose() """
     for app in apps:
 
-        @app.on_message(filters.text & filters.private or filters.text & filters.private & filters.reply)
+        @app.on_message(filters.text & filters.private and not filters.bot and not filters.me
+                        or filters.text & filters.private & filters.reply and not filters.bot)
         async def answer_(client, message):
             # logger.info(message)
             tg_cli = Tg_client.objects.filter(user_id=message.from_user.id)
@@ -52,7 +53,8 @@ async def main():
                 * Создание объекта клиента
             """
             if not tg_cli:
-                text = Account.objects.filter(session=f'sessions/{client.name}.session').last().auto_answering_text
+                account = Account.objects.filter(session=f'sessions/{client.name}.session').last()
+                text = account.auto_answering_text
                 if not text:
                     text = GeneralSettings.objects.get(pk=1).general_auto_answering
                 await asyncio.sleep(10)
@@ -62,7 +64,8 @@ async def main():
                 first_name = message.from_user.first_name
                 if not username: username = str(first_name)
                 last_name = message.from_user.last_name
-                Tg_client.objects.create(user_id=user_id, username=username, first_name=first_name, last_name=last_name)
+                Tg_client.objects.create(user_id=user_id, username=username, first_name=first_name, last_name=last_name,
+                                         account=account)
 
     await compose(apps)
 

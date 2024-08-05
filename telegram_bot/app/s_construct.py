@@ -56,7 +56,7 @@ class LoginWindow(QWidget):
             return
 
         try:
-            self.client = Client("my_account",
+            self.client = Client(f"{str(api_id)}",
                                  api_id=api_id, api_hash=api_hash, phone_number=phone_number,
                                  device_model='iphone 12 pro',
                                  app_version='15.3.0',

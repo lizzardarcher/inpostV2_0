@@ -27,10 +27,15 @@ urlpatterns = [
     # path('chat/<int:pk>/delete/', views.ChatDeleteView.as_view(), name='chat delete'),
     path('chat/<int:id>/delete/', views.ChatDeleteView.delete_view, name='chat delete'),
 
-    path('channel/', views.ChannelToSubscribeListView.as_view(), name='channels'),
-    path('channel/create/', views.ChannelToSubscribeCreateView.as_view(), name='channel create'),
-    path('channel/<int:pk>/update/', views.ChannelToSubscribeUpdateView.as_view(), name='channel edit'),
-    path('channel/<int:pk>/delete/', views.ChannelToSubscribeDeleteView.as_view(), name='channel delete'),
+    path('channel/', views.ChannelToSubscribeListView.as_view(), name='channels'),  # no use
+    path('channel/create/', views.ChannelToSubscribeCreateView.as_view(), name='channel create'),  # no use
+    path('channel/<int:pk>/update/', views.ChannelToSubscribeUpdateView.as_view(), name='channel edit'),  # no use
+    path('channel/<int:pk>/delete/', views.ChannelToSubscribeDeleteView.as_view(), name='channel delete'),  # no use
+
+    path('autoanswering/', views.AutoAnsweringTemplateListView.as_view(), name='autoanswering'),
+    path('autoanswering/create/', views.AutoAnsweringTemplateCreateView.as_view(), name='autoanswering create'),
+    path('autoanswering/<int:pk>/update/', views.AutoAnsweringTemplateUpdateView.as_view(), name='autoanswering edit'),
+    path('autoanswering/<int:pk>/delete/', views.AutoAnsweringTemplateDeleteView.as_view(), name='autoanswering delete'),
 
     path('statistics/', views.StatisticsDetailView.as_view(), name='statistics'),
     path('msg/', views.MessageListView.as_view(), name='msg'),

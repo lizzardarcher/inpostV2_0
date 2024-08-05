@@ -26,7 +26,7 @@ from apps.spamer.models import Account, AccountLogging, Message, Chat
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format='%(asctime)s %(levelname) -8s %(message)s',
-    level=logging.INFO,
+    level=logging.FATAL,
     datefmt='%Y.%m.%d %I:%M:%S',
     handlers=[
         logging.StreamHandler(stream=sys.stderr)
@@ -102,6 +102,8 @@ async def post_to_chats(acc_id):
         user = acc.user
         logger.info(f'[Account ID] [{acc_id}] [Session name] [{session_name}] [USER] [{user}]')
 
+        # Текст с уникальной сгенерированной строкой в конце
+        text = acc.common_text + random_string(letter_count=6, digit_count=6)
         try:
 
             # Активируем клиент
@@ -137,7 +139,6 @@ async def post_to_chats(acc_id):
                         text = emoji_pattern.sub(r'', text)  # no emoji
 
                     # Присоединяемся к чату, если необходимо
-                    # if await check_if_joined(client, chat_username):
                     try:
                         logger.info(f'[Join chat] [{chat_username}] [TRY]')
                         await client.join_chat(chat_id=chat_username)
@@ -149,8 +150,6 @@ async def post_to_chats(acc_id):
                         await asyncio.sleep(4.1)
 
                     try:
-                        # Текст с уникальной сгенерированной строкой в конце
-                        text = acc.common_text + random_string(letter_count=6, digit_count=6)
 
                         # Отправляем сообщение
                         logger.info(f'[Send message] [{text}] [TRY]')
@@ -174,6 +173,12 @@ async def post_to_chats(acc_id):
                             AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                                           message='401 USER_DEACTIVATED_BAN',
                                                           datetime=datetime.datetime.now(), chat=chat)
+                        elif '401 AUTH_KEY_UNREGISTERED' in traceback.format_exc():
+                            Account.objects.filter(id_account=acc_id).update(status=False)
+                            AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
+                                                          message='401 AUTH_KEY_UNREGISTERED',
+                                                          datetime=datetime.datetime.now(), chat=None)
+
                         elif '400 USER_BANNED_IN_CHANNEL' in traceback.format_exc():
                             AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
                                                           message='400 USER_BANNED_IN_CHANNEL',
@@ -214,7 +219,16 @@ async def post_to_chats(acc_id):
             await asyncio.sleep(acc.delay * 60)
         except Exception as e:
             print(e)
-            print(traceback.format_exc())
+            if '401 USER_DEACTIVATED_BAN' in traceback.format_exc():
+                Account.objects.filter(id_account=acc_id).update(status=False)
+                AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
+                                              message='401 USER_DEACTIVATED_BAN',
+                                              datetime=datetime.datetime.now(), chat=None)
+            elif '401 AUTH_KEY_UNREGISTERED' in traceback.format_exc():
+                Account.objects.filter(id_account=acc_id).update(status=False)
+                AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
+                                              message='401 AUTH_KEY_UNREGISTERED',
+                                              datetime=datetime.datetime.now(), chat=None)
 
 
 if __name__ == '__main__':

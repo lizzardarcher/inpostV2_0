@@ -45,6 +45,9 @@ while True:
             #  Если аккаунт ещё не активирован
             if account.session.name.split('/')[-1] == file:
 
+                # os.system('systemctl stop spamer.service')
+                # os.system('systemctl stop autoanswering.service')
+
                 if not account.is_activated:
 
                     session_for_chat = file.replace('.', '_for_chat.')
@@ -55,18 +58,15 @@ while True:
                     with client:
                         # Получаем информацию о пользователе
                         user = client.get_me()
-
-                        profile_photo = user.photo.big_file_id
-                        print(user.photo)
-
-                        # Download the photo
-                        photo_bytes = client.download_media(profile_photo,
-                                            file_name=f'/var/www/html/inpost/core/static/media/{profile_photo}.jpg')
-                        print(photo_bytes)
-
-                        # Create a file object from the photo bytes
-                        photo_file = File(open(photo_bytes, 'rb'), name=f'{profile_photo}.jpg')
-                        print(photo_file)
+                        try:
+                            profile_photo = user.photo.big_file_id
+                            # Download the photo
+                            photo_bytes = client.download_media(profile_photo,
+                                                file_name=f'/var/www/html/inpost/core/static/media/{profile_photo}.jpg')
+                            # Create a file object from the photo bytes
+                            photo_file = File(open(photo_bytes, 'rb'), name=f'{profile_photo}.jpg')
+                        except:
+                            photo_file = None
 
                         first_name = user.first_name
                         last_name = user.last_name
@@ -89,6 +89,9 @@ while True:
                         client.set_profile_photo(photo=open(photo, 'rb'))
                     acc.update(is_change_needed=False)
                     break
+
+                # os.system('systemctl start spamer.service')
+                # os.system('systemctl start autoanswering.service')
 
                 sleep(5)
                 GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)

@@ -12,8 +12,10 @@ from django.views.generic import (ListView, DetailView, CreateView, UpdateView, 
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 
-from apps.spamer.models import (Account, Message, Client, AccountLogging, GeneralSettings, Chat, ChannelToSubscribe)
-from apps.spamer.forms import (AccountForm, ChatUploadForm, AccountUploadForm, ChatForm, ChannelToSubscribeForm)
+from apps.spamer.models import (Account, Message, Client, AccountLogging, GeneralSettings, Chat, ChannelToSubscribe,
+                                AutoAnsweringTemplate)
+from apps.spamer.forms import (AccountForm, ChatUploadForm, AccountUploadForm, ChatForm, ChannelToSubscribeForm,
+                               AutoAnsweringTemplateForm)
 from apps.middleware.current_user import get_current_user
 from apps.home.utils import get_chat_info
 
@@ -363,7 +365,7 @@ class ClientListView(LoginRequiredMixin, ListView):
 class AccountLoggingListView(LoginRequiredMixin, ListView):
     model = AccountLogging
     context_object_name = 'logging'
-    paginate_by = 50
+    paginate_by = 100
     template_name = 'spamer/home/logging.html'
 
     def get_context_data(self, **kwargs):
@@ -374,7 +376,7 @@ class AccountLoggingListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        return AccountLogging.objects.filter(user=self.request.user)
+        return AccountLogging.objects.filter(user=self.request.user).order_by('-datetime')
 
 
 class GeneralSettingsListView(LoginRequiredMixin, ListView):
@@ -386,4 +388,60 @@ class GeneralSettingsListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(GeneralSettingsListView, self).get_context_data(**kwargs)
         context.update({'segment': 'spm', 'spm_segment': 'settings'})
+        return context
+
+
+class AutoAnsweringTemplateListView(LoginRequiredMixin, ListView):
+    model = AutoAnsweringTemplate
+    context_object_name = 'autoanswering_templates'
+    template_name = 'spamer/home/autoanswering_templates.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AutoAnsweringTemplateListView, self).get_context_data(**kwargs)
+        context.update({'segment': 'spm', 'spm_segment': 'autoanswering'})
+        return context
+
+
+class AutoAnsweringTemplateCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    form_class = AutoAnsweringTemplateForm
+    success_url = '/spm/autoanswering/'
+    template_name = 'spamer/crud/create.html'
+    success_message = 'Шаблон успешно добавлен!'
+
+    def get_context_data(self, **kwargs):
+        context = super(AutoAnsweringTemplateCreateView, self).get_context_data(**kwargs)
+        context.update({'segment': 'spm', 'spm_segment': 'autoanswering',})
+        return context
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class AutoAnsweringTemplateUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    model = AutoAnsweringTemplate
+    form_class = AutoAnsweringTemplateForm
+    template_name = 'spamer/crud/create.html'
+    success_url = '/spm/autoanswering/'
+    success_message = 'Шаблон успешно обновлен!'
+
+    def get_context_data(self, **kwargs):
+        context = super(AutoAnsweringTemplateUpdateView, self).get_context_data(**kwargs)
+        context.update({'segment': 'spm', 'spm_segment': 'autoanswering'})
+        return context
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class AutoAnsweringTemplateDeleteView(LoginRequiredMixin, DeleteView):
+    model = AutoAnsweringTemplate
+    success_url = '/spm/autoanswering/'
+    template_name = 'spamer/crud/delete.html'
+    success_message = 'Шаблон успешно удалён!'
+
+    def get_context_data(self, **kwargs):
+        context = super(AutoAnsweringTemplateDeleteView, self).get_context_data(**kwargs)
+        context.update({'segment': 'spm', 'spm_segment': 'autoanswering'})
         return context

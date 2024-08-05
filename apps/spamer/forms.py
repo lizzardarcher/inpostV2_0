@@ -114,3 +114,12 @@ class ChannelToSubscribeForm(forms.ModelForm):
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control'}),
         }
+
+
+class AutoAnsweringTemplateForm(forms.ModelForm):
+    class Meta:
+        model = AutoAnsweringTemplate
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={'class': 'form-control'}),
+        }

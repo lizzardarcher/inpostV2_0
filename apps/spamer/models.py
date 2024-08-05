@@ -16,6 +16,18 @@ LOG_LEVEL = (
 )
 
 
+class AutoAnsweringTemplate(models.Model):
+    text = models.TextField(null=False, blank=False, verbose_name='Text')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пользователь')
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        verbose_name = 'Текст автоответчика'
+        verbose_name_plural = 'Текст автоответчика'
+
+
 class Account(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пользователь')
     datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время добавления')
@@ -43,6 +55,8 @@ class Account(models.Model):
     common_text = models.TextField(max_length=4000, null=True, blank=True, verbose_name='Текст Рассылки')
     media = models.FileField(null=True, blank=True, verbose_name='Image')
     auto_answering_text = models.TextField(max_length=4000, null=True, blank=True, verbose_name='Текст автоответчика')
+    auto_answering_text_ref = models.ForeignKey(AutoAnsweringTemplate, on_delete=models.CASCADE, related_name='autoref',
+                                                default=None, null=True, blank=True, verbose_name='Текст автоответчика')
 
     is_auto_answering_active = models.BooleanField(default=False, null=True, blank=True,
                                                    verbose_name='Автоответчик вкл/выкл')
@@ -56,9 +70,11 @@ class Account(models.Model):
 
     def __str__(self):
         if self.status:
-            return '✅ @' + str(self.username).split('/')[-1]
+            return '✅ ' + self.first_name
+            # return '✅ @' + str(self.username).split('/')[-1]
         else:
-            return '❌ @' + str(self.username).split('/')[-1]
+            return '❌ ' + self.first_name
+            # return '❌ @' + str(self.username).split('/')[-1]
 
     class Meta:
         db_table = 'account'
@@ -109,6 +125,7 @@ class Chat(models.Model):
         db_table = 'chat'
         verbose_name = 'Группа для Спама'
         verbose_name_plural = 'Группы для Спама'
+        unique_together = (('user', 'link'),)
 
 
 class ChannelToSubscribe(models.Model):

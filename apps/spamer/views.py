@@ -49,12 +49,12 @@ class AccountListView(LoginRequiredMixin, ListView):
     model = Account
     context_object_name = 'accounts'
     template_name = 'spamer/home/account.html'
-
+    ordering = ['-status']
     def get_context_data(self, **kwargs):
         context = super(AccountListView, self).get_context_data(**kwargs)
         context.update({'segment': 'spm',
                         'spm_segment': 'account',
-                        'spam_active': Account.objects.filter(is_spam_active=True).count(),})
+                        'spam_active': Account.objects.filter(is_spam_active=True, status=True).count(),})
         return context
 
 

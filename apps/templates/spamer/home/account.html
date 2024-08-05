@@ -34,13 +34,13 @@
                         <h5 class="card-title">Загружен: <span class="text text-primary">{{ acc.datetime }}</span></h5>
                         <p class="card-text">Имя: <span class="text text-primary">{{ acc.first_name }}</span></p>
                         <p class="card-text">Фамилия: <span class="text text-primary">{{ acc.last_name }}</span></p>
-                        <p class="card-text">Активен: <span class="text text-primary">{% if acc.status %}✅{% else %}
-                            ❌{% endif %}</span></p>
+                        <p class="card-text">{% if acc.status %}<span class="text-success">Активен: </span>💓{% else %}
+                            <span class="text-danger">Неактивен:</span> 💀{% endif %}</p>
                         <p class="text-primary">Спам {% if acc.is_spam_active %}Запущен ✅{% else %}Остановлен
                             ❌{% endif %}</p>
                         <p class="text-primary">Автоответчик {% if acc.is_auto_answering_active %}
                             ✅{% else %}❌{% endif %}</p>
-                        <p class="card-img"><img class="img-thumbnail" src="{{ MEDIA_URL }}{{ acc.photo }}"
+                        <p class="card-img"><img class="img-thumbnail" style="width: 15em;" src="{{ MEDIA_URL }}{{ acc.photo }}"
                                                  alt="acc image"/></p>
                         <a href="{{ acc.id_account }}" class="btn btn-primary mt-3">Подробнее</a>
                     </div>

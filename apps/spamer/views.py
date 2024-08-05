@@ -26,10 +26,10 @@ class BaseSpamerView(LoginRequiredMixin, TemplateView):
         today_end = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
         context = super(BaseSpamerView, self).get_context_data(**kwargs)
         context.update({'segment': 'spm',
-                        'len_account': Account.objects.all().count(),
-                        'len_account_active': Account.objects.filter(status=True).count(),
-                        'len_chat': Chat.objects.all().count(),
-                        'len_chat_active': Chat.objects.filter(is_active=True).count(),
+                        'len_account': Account.objects.filter(user=self.request.user).count(),
+                        'len_account_active': Account.objects.filter(user=self.request.user, status=True).count(),
+                        'len_chat': Chat.objects.filter(user=self.request.user).count(),
+                        'len_chat_active': Chat.objects.filter(user=self.request.user, is_active=True).count(),
                         'len_message': Message.objects.all().count(),
                         'len_message_day': Message.objects.filter(datetime__gte=today_start,
                                                                   datetime__lte=today_end).count(),

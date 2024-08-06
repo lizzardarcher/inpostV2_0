@@ -35,7 +35,7 @@ urlpatterns = [
     path('autoanswering/', views.AutoAnsweringTemplateListView.as_view(), name='autoanswering'),
     path('autoanswering/create/', views.AutoAnsweringTemplateCreateView.as_view(), name='autoanswering create'),
     path('autoanswering/<int:pk>/update/', views.AutoAnsweringTemplateUpdateView.as_view(), name='autoanswering edit'),
-    path('autoanswering/<int:pk>/delete/', views.AutoAnsweringTemplateDeleteView.as_view(), name='autoanswering delete'),
+    path('autoanswering/<int:id>/delete/', views.AutoAnsweringTemplateDeleteView.delete_view, name='autoans delete'),
 
     path('statistics/', views.StatisticsDetailView.as_view(), name='statistics'),
     path('msg/', views.MessageListView.as_view(), name='msg'),

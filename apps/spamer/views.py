@@ -50,11 +50,12 @@ class AccountListView(LoginRequiredMixin, ListView):
     context_object_name = 'accounts'
     template_name = 'spamer/home/account.html'
     ordering = ['-status']
+
     def get_context_data(self, **kwargs):
         context = super(AccountListView, self).get_context_data(**kwargs)
         context.update({'segment': 'spm',
                         'spm_segment': 'account',
-                        'spam_active': Account.objects.filter(is_spam_active=True, status=True).count(),})
+                        'spam_active': Account.objects.filter(is_spam_active=True, status=True).count(), })
         return context
 
 
@@ -105,14 +106,14 @@ class AccountUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     @staticmethod
     def account_spam_activate(request):
         messages.success(request, 'Спам запущен 🔥🔥🔥')
-        Account.objects.filter(id_account__gt=0).update(is_spam_active=True)
+        Account.objects.filter(id_account__gt=0, status=True).update(is_spam_active=True)
         GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
         return redirect('/spm/accs')
 
     @staticmethod
     def account_spam_deactivate(request):
         messages.warning(request, 'Спам остановлен 🛑')
-        Account.objects.filter(id_account__gt=0).update(is_spam_active=False)
+        Account.objects.filter(id_account__gt=0, status=True).update(is_spam_active=False)
         GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
         return redirect('/spm/accs')
 
@@ -410,7 +411,7 @@ class AutoAnsweringTemplateCreateView(SuccessMessageMixin, LoginRequiredMixin, C
 
     def get_context_data(self, **kwargs):
         context = super(AutoAnsweringTemplateCreateView, self).get_context_data(**kwargs)
-        context.update({'segment': 'spm', 'spm_segment': 'autoanswering',})
+        context.update({'segment': 'spm', 'spm_segment': 'autoanswering', })
         return context
 
     def form_valid(self, form):
@@ -445,3 +446,10 @@ class AutoAnsweringTemplateDeleteView(LoginRequiredMixin, DeleteView):
         context = super(AutoAnsweringTemplateDeleteView, self).get_context_data(**kwargs)
         context.update({'segment': 'spm', 'spm_segment': 'autoanswering'})
         return context
+
+    @staticmethod
+    def delete_view(request, id):
+        obj = AutoAnsweringTemplate.objects.get(id=id)
+        obj.delete()
+        messages.warning(request, message='Шаблон автоответчика удалён!')
+        return HttpResponseRedirect("/spm/autoanswering/")

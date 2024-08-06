@@ -70,10 +70,10 @@ class Account(models.Model):
 
     def __str__(self):
         if self.status:
-            return '✅ ' + self.first_name
+            return '✅ ' + str(self.first_name)
             # return '✅ @' + str(self.username).split('/')[-1]
         else:
-            return '❌ ' + self.first_name
+            return '❌ ' + str(self.first_name)
             # return '❌ @' + str(self.username).split('/')[-1]
 
     class Meta:

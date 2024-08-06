@@ -37,62 +37,67 @@ while True:
     accounts = Account.objects.filter(is_activated=False) | Account.objects.filter(is_change_needed=True)
     print('Pending accounts:', accounts, len(accounts))
     for account in accounts:
+        try:
+            acc = Account.objects.filter(session=account.session)
 
-        acc = Account.objects.filter(session=account.session)
+            for file in file_list:
 
-        for file in file_list:
+                #  Если аккаунт ещё не активирован
+                if account.session.name.split('/')[-1] == file:
 
-            #  Если аккаунт ещё не активирован
-            if account.session.name.split('/')[-1] == file:
+                    # os.system('systemctl stop spamer.service')
+                    # os.system('systemctl stop autoanswering.service')
+                    # sleep(3)
+                    if not account.is_activated:
 
-                # os.system('systemctl stop spamer.service')
-                # os.system('systemctl stop autoanswering.service')
+                        session_for_chat = file.replace('.', '_for_chat.')
+                        os.system(f"cp {file} {session_for_chat}")
+                        acc.update(session_for_chat=session_for_chat)
 
-                if not account.is_activated:
+                        client = Client(name=file.split('.')[0])
+                        with client:
+                            # Получаем информацию о пользователе
+                            user = client.get_me()
+                            try:
+                                profile_photo = user.photo.big_file_id
+                                # Download the photo
+                                photo_bytes = client.download_media(profile_photo,
+                                                    file_name=f'/var/www/html/inpost/core/static/media/{profile_photo}.jpg')
+                                # Create a file object from the photo bytes
+                                photo_file = File(open(photo_bytes, 'rb'), name=f'{profile_photo}.jpg')
+                            except:
+                                photo_file = None
 
-                    session_for_chat = file.replace('.', '_for_chat.')
-                    os.system(f"cp {file} {session_for_chat}")
-                    acc.update(session_for_chat=session_for_chat)
+                            first_name = user.first_name
+                            last_name = user.last_name
+                            user_id = user.id
+                            username = user.username
+                        acc.update(is_activated=True, first_name=first_name, last_name=last_name, username=username,
+                                   id_account=user_id, photo=photo_file, is_auto_answering_active=True)
+                        acc.update(is_change_needed=False)
 
-                    client = Client(name=file.split('.')[0])
-                    with client:
-                        # Получаем информацию о пользователе
-                        user = client.get_me()
-                        try:
-                            profile_photo = user.photo.big_file_id
-                            # Download the photo
-                            photo_bytes = client.download_media(profile_photo,
-                                                file_name=f'/var/www/html/inpost/core/static/media/{profile_photo}.jpg')
-                            # Create a file object from the photo bytes
-                            photo_file = File(open(photo_bytes, 'rb'), name=f'{profile_photo}.jpg')
-                        except:
-                            photo_file = None
+                        break
 
-                        first_name = user.first_name
-                        last_name = user.last_name
-                        user_id = user.id
-                        username = user.username
-                    acc.update(is_activated=True, first_name=first_name, last_name=last_name, username=username,
-                               id_account=user_id, photo=photo_file, is_auto_answering_active=True)
-                    acc.update(is_change_needed=False)
+                    elif account.is_change_needed:
+                        client = Client(name=file.split('.')[0])
+                        first_name = account.first_name
+                        last_name = account.last_name
+                        photo = f'/var/www/html/inpost/core/static/media/{account.photo}'
+                        print('[PHOTO]',photo)
+                        with client:
+                            client.update_profile(first_name=first_name, last_name=last_name,)
+                            client.set_profile_photo(photo=open(photo, 'rb'))
+                        acc.update(is_change_needed=False)
+                        break
 
-                    break
+                    # sleep(3)
+                    # os.system('systemctl start spamer.service')
+                    # sleep(3)
+                    # os.system('systemctl start autoanswering.service')
 
-                elif account.is_change_needed:
-                    client = Client(name=file.split('.')[0])
-                    first_name = account.first_name
-                    last_name = account.last_name
-                    photo = f'/var/www/html/inpost/core/static/media/{account.photo}'
-                    print('[PHOTO]',photo)
-                    with client:
-                        client.update_profile(first_name=first_name, last_name=last_name,)
-                        client.set_profile_photo(photo=open(photo, 'rb'))
-                    acc.update(is_change_needed=False)
-                    break
-
-                # os.system('systemctl start spamer.service')
-                # os.system('systemctl start autoanswering.service')
-
-                sleep(5)
-                GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
+                    sleep(5)
+                    GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
+        except:
+            pass
+        GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
     sleep(5)

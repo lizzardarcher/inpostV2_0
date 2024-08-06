@@ -26,7 +26,7 @@ from apps.spamer.models import Account, AccountLogging, Message, Chat
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format='%(asctime)s %(levelname) -8s %(message)s',
-    level=logging.FATAL,
+    level=logging.INFO,
     datefmt='%Y.%m.%d %I:%M:%S',
     handlers=[
         logging.StreamHandler(stream=sys.stderr)
@@ -169,12 +169,12 @@ async def post_to_chats(acc_id):
                     except Exception as e:
                         print(e)
                         if '401 USER_DEACTIVATED_BAN' in traceback.format_exc():
-                            Account.objects.filter(id_account=acc_id).update(status=False)
+                            Account.objects.filter(id_account=acc_id).update(status=False, is_change_needed=False)
                             AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                                           message='401 USER_DEACTIVATED_BAN',
                                                           datetime=datetime.datetime.now(), chat=chat)
                         elif '401 AUTH_KEY_UNREGISTERED' in traceback.format_exc():
-                            Account.objects.filter(id_account=acc_id).update(status=False)
+                            Account.objects.filter(id_account=acc_id).update(status=False, is_change_needed=False)
                             AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                                           message='401 AUTH_KEY_UNREGISTERED',
                                                           datetime=datetime.datetime.now(), chat=None)
@@ -220,12 +220,12 @@ async def post_to_chats(acc_id):
         except Exception as e:
             print(e)
             if '401 USER_DEACTIVATED_BAN' in traceback.format_exc():
-                Account.objects.filter(id_account=acc_id).update(status=False)
+                Account.objects.filter(id_account=acc_id).update(status=False, is_change_needed=False)
                 AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                               message='401 USER_DEACTIVATED_BAN',
                                               datetime=datetime.datetime.now(), chat=None)
             elif '401 AUTH_KEY_UNREGISTERED' in traceback.format_exc():
-                Account.objects.filter(id_account=acc_id).update(status=False)
+                Account.objects.filter(id_account=acc_id).update(status=False, is_change_needed=False)
                 AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                               message='401 AUTH_KEY_UNREGISTERED',
                                               datetime=datetime.datetime.now(), chat=None)

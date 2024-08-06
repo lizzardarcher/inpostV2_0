@@ -377,7 +377,7 @@ class AccountLoggingListView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
-        return AccountLogging.objects.filter(user=self.request.user).order_by('-datetime')
+        return AccountLogging.objects.filter(user=self.request.user).order_by('-datetime')[:1500]
 
 
 class GeneralSettingsListView(LoginRequiredMixin, ListView):

@@ -152,11 +152,10 @@ async def post_to_chats(acc_id):
                     try:
 
                         # Отправляем сообщение
-                        logger.info(f'[Send message] [{text}] [TRY]')
                         res = await client.send_message(chat_id=chat_username, text=text, parse_mode=ParseMode.MARKDOWN)
-                        logger.info(f'[Send message] [{chat_username}] [SUCCESS]')
+                        logger.info(f'[Send message] [{acc}] [{chat_username}] [SUCCESS]')
                         jsn = json.loads(str(res))
-                        await asyncio.sleep(7.7)
+                        await asyncio.sleep(random.randint(a=3, b=8))
 
                         # Записываем сообщение в базу
                         account_obj = Account.objects.filter(id_account=jsn['from_user']['id'])[0]
@@ -244,5 +243,5 @@ if __name__ == '__main__':
         Новый аккаунт в отдельный поток выполнения
         """
         loop.create_task(post_to_chats(account.id_account))
-
+        logger.info(f'[Task created][{account}]')
     loop.run_forever()

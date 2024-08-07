@@ -96,8 +96,10 @@ while True:
                     # os.system('systemctl start autoanswering.service')
 
                     sleep(5)
-                    GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
+                    # todo GeneralSettings handler
+                    # GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
         except:
             pass
-        GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
+        # todo GeneralSettings handler
+        # GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
     sleep(5)

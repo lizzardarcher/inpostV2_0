@@ -13,9 +13,9 @@ from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 
 from apps.spamer.models import (Account, Message, Client, AccountLogging, GeneralSettings, Chat, ChannelToSubscribe,
-                                AutoAnsweringTemplate)
+                                AutoAnsweringTemplate, CommonTextTemplate)
 from apps.spamer.forms import (AccountForm, ChatUploadForm, AccountUploadForm, ChatForm, ChannelToSubscribeForm,
-                               AutoAnsweringTemplateForm)
+                               AutoAnsweringTemplateForm, CommonTextTemplateForm)
 from apps.middleware.current_user import get_current_user
 from apps.home.utils import get_chat_info
 
@@ -453,3 +453,66 @@ class AutoAnsweringTemplateDeleteView(LoginRequiredMixin, DeleteView):
         obj.delete()
         messages.warning(request, message='Шаблон автоответчика удалён!')
         return HttpResponseRedirect("/spm/autoanswering/")
+
+
+class CommonTextTemplateListView(LoginRequiredMixin, ListView):
+    model = CommonTextTemplate
+    context_object_name = 'common_text_templates'
+    template_name = 'spamer/home/common_text_templates.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(CommonTextTemplateListView, self).get_context_data(**kwargs)
+        context.update({'segment': 'spm', 'spm_segment': 'common_text'})
+        return context
+
+
+class CommonTextTemplateCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    form_class = CommonTextTemplateForm
+    success_url = '/spm/common_text/'
+    template_name = 'spamer/crud/create.html'
+    success_message = 'Шаблон успешно добавлен!'
+
+    def get_context_data(self, **kwargs):
+        context = super(CommonTextTemplateCreateView, self).get_context_data(**kwargs)
+        context.update({'segment': 'spm', 'spm_segment': 'common_text', })
+        return context
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class CommonTextTemplateUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    model = CommonTextTemplate
+    form_class = CommonTextTemplateForm
+    template_name = 'spamer/crud/create.html'
+    success_url = '/spm/common_text/'
+    success_message = 'Шаблон успешно обновлен!'
+
+    def get_context_data(self, **kwargs):
+        context = super(CommonTextTemplateUpdateView, self).get_context_data(**kwargs)
+        context.update({'segment': 'spm', 'spm_segment': 'common_text'})
+        return context
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class CommonTextTemplateDeleteView(LoginRequiredMixin, DeleteView):
+    model = CommonTextTemplate
+    success_url = '/spm/common_text/'
+    template_name = 'spamer/crud/delete.html'
+    success_message = 'Шаблон успешно удалён!'
+
+    def get_context_data(self, **kwargs):
+        context = super(CommonTextTemplateDeleteView, self).get_context_data(**kwargs)
+        context.update({'segment': 'spm', 'spm_segment': 'common_text'})
+        return context
+
+    @staticmethod
+    def delete_view(request, id):
+        obj = CommonTextTemplate.objects.get(id=id)
+        obj.delete()
+        messages.warning(request, message='Шаблон текста рассылки удалён!')
+        return HttpResponseRedirect("/spm/common_text/")

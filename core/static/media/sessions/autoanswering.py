@@ -54,7 +54,7 @@ async def main():
             """
             if not tg_cli:
                 account = Account.objects.filter(session=f'sessions/{client.name}.session').last()
-                text = account.auto_answering_text
+                text = account.auto_answering_text_ref.text
                 if not text:
                     text = GeneralSettings.objects.get(pk=1).general_auto_answering
                 await asyncio.sleep(10)

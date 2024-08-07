@@ -1,0 +1,57 @@
+{% extends "layouts/spam-base.html" %}
+{% block title %} Аккаунты для рассылки {% endblock %}
+
+{% block content %}
+
+
+    <div class="p-2 m-1">
+        <h1> Шаблоны Рассылки </h1>
+        <p></p>
+
+        <a class="btn btn-primary" href="/spm/common_text/create/"><b>+ Добавить Шаблон</b></a>
+
+        <table class="table">
+            <tbody>
+            {% for c in common_text_templates %}
+                <tr>
+
+                    <td>{{ c.text }}</td>
+                    <td><a class="btn btn-warning" href="{{ c.id }}/update/"><i class="fa fa-edit"></i></a></td>
+                    <td>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Modal{{ c.id }}">
+                            <i class="fa fa-trash"></i></a>
+                        </button>
+                    </td>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="Modal{{ c.id }}" tabindex="-1" role="dialog"
+                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title" id="exampleModalLabel">Удаление</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <i class="tim-icons icon-simple-remove"></i>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Вы действительно хотите удалить шаблон?</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                                    </button>
+                                    <a class="btn-danger btn" href="{{ c.id }}/delete/">Подтвердить</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock content %}
+
+{% block stylesheets %}{% endblock stylesheets %}
+{% block javascripts %}{% endblock javascripts %}

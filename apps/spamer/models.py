@@ -28,6 +28,18 @@ class AutoAnsweringTemplate(models.Model):
         verbose_name_plural = 'Текст автоответчика'
 
 
+class CommonTextTemplate(models.Model):
+    text = models.TextField(null=False, blank=False, verbose_name='Text')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пользователь')
+
+    def __str__(self):
+        return self.text
+
+    class Meta:
+        verbose_name = 'Текст Рассылки'
+        verbose_name_plural = 'Текст Рассылки'
+
+
 class Account(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Пользователь')
     datetime = models.DateTimeField(auto_now_add=True, verbose_name='Время добавления')
@@ -55,7 +67,12 @@ class Account(models.Model):
     common_text = models.TextField(max_length=4000, null=True, blank=True, verbose_name='Текст Рассылки')
     media = models.FileField(null=True, blank=True, verbose_name='Image')
     auto_answering_text = models.TextField(max_length=4000, null=True, blank=True, verbose_name='Текст автоответчика')
-    auto_answering_text_ref = models.ForeignKey(AutoAnsweringTemplate, on_delete=models.CASCADE, related_name='autoref',
+
+    common_text_ref = models.ForeignKey(to='CommonTextTemplate', on_delete=models.CASCADE, related_name='commref',
+                                        default=None, null=True,
+                                        blank=True, verbose_name='Текст Рассылки')
+    auto_answering_text_ref = models.ForeignKey(to='AutoAnsweringTemplate', on_delete=models.CASCADE,
+                                                related_name='autoref',
                                                 default=None, null=True, blank=True, verbose_name='Текст автоответчика')
 
     is_auto_answering_active = models.BooleanField(default=False, null=True, blank=True,

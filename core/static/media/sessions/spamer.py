@@ -103,7 +103,7 @@ async def post_to_chats(acc_id):
         logger.info(f'[Account ID] [{acc_id}] [Session name] [{session_name}] [USER] [{user}]')
 
         # Текст с уникальной сгенерированной строкой в конце
-        text = acc.common_text + random_string(letter_count=6, digit_count=6)
+        text = acc.common_text_ref.text + random_string(letter_count=6, digit_count=6)
         try:
 
             # Активируем клиент

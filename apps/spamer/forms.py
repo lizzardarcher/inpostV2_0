@@ -26,9 +26,9 @@ class AccountForm(forms.ModelForm):
             # 'session',
             # 'session_for_chat',
             # 'session_for_lk',
-            'common_text',
+            'common_text_ref',
             # 'media',
-            'auto_answering_text',
+            'auto_answering_text_ref',
             'is_auto_answering_active',
             'is_spam_active',
             # 'is_spam_lk_active',
@@ -53,8 +53,8 @@ class AccountForm(forms.ModelForm):
             # 'session_for_chat': forms.TextInput(attrs={'class': 'form-control'}),
             # 'session_for_lk': forms.TextInput(attrs={'class': 'form-control'}),
             # 'media': forms.FileInput(attrs={'class': 'form-control'}),
-            'common_text': forms.Textarea(attrs={'class': 'form-control'}),
-            'auto_answering_text': forms.Textarea(attrs={'class': 'form-control'}),
+            'common_text_ref': forms.Select(attrs={'class': 'form-control text-info' }),
+            'auto_answering_text_ref': forms.Select(attrs={'class': 'form-control text-info' }),
             'is_auto_answering_active': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'is_spam_active': forms.CheckboxInput(attrs={'class': 'form-control'}),
             # 'is_spam_lk_active': forms.CheckboxInput(attrs={'class': 'form-control'}),
@@ -67,12 +67,13 @@ class AccountForm(forms.ModelForm):
 class AccountUploadForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ['session', 'common_text', 'auto_answering_text_ref', ]
+        fields = ['session', 'common_text_ref', 'auto_answering_text_ref', ]
         widgets = {
             'session': forms.FileInput(attrs={'class': 'form-control'}),
-            'common_text': forms.Textarea(attrs={'class': 'form-control'}),
+            # 'common_text': forms.Textarea(attrs={'class': 'form-control'}),
+            'common_text_ref': forms.Select(attrs={'class': 'form-control text-info'}),
             # 'auto_answering_text': forms.Textarea(attrs={'class': 'form-control'}),
-            'auto_answering_text_ref': forms.Select(attrs={'class': 'form-control text-dark'}),
+            'auto_answering_text_ref': forms.Select(attrs={'class': 'form-control text-info'}),
         }
 
 
@@ -120,6 +121,15 @@ class ChannelToSubscribeForm(forms.ModelForm):
 class AutoAnsweringTemplateForm(forms.ModelForm):
     class Meta:
         model = AutoAnsweringTemplate
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+
+
+class CommonTextTemplateForm(forms.ModelForm):
+    class Meta:
+        model = CommonTextTemplate
         fields = ['text']
         widgets = {
             'text': forms.Textarea(attrs={'class': 'form-control'}),

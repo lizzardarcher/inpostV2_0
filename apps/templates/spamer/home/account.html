@@ -5,23 +5,29 @@
     <div class="p-2 mt-3">
         {% if spam_active %}
             <h4 class="p-3 bg-info col-4 rounded text-dark">Спам Запущен 🔥🔥🔥 (аккаунтов в работе {{ spam_active }})</h4>
-            {% else %}
+        {% else %}
             <h4 class="p-3 bg-warning col-4 rounded text-dark">Спам Остановлен 🛑</h4>
         {% endif %}
         <div class="row">
             <div class="col-12">
                 <h2 class="d-inline-block">Мои Аккаунты</h2>
                 <a href="upload" class="btn btn-primary">+ Добавить Акк</a>
-                <a href="/spm/autoanswering/create/" class="btn btn-secondary">+ Шаблон Автоответчика</a>
-                <a href="/spm/autoanswering/" class="btn btn-secondary"> << Список</a>
-                <a href="/spm/common_text/create/" class="btn btn-secondary">+ Шаблон Рассылки</a>
-                <a href="/spm/common_text/" class="btn btn-secondary"> << Список</a>
+
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="/spm/common_text/create/" class="btn btn-secondary">+</a>
+                    <a href="/spm/common_text/" class="btn btn-secondary">Шаблоны Рассылки</a>
+                </div>
+
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <a href="/spm/autoanswering/create/" class="btn btn-secondary">+</a>
+                    <a href="/spm/autoanswering/" class="btn btn-secondary">Шаблоны Автоответчика</a>
+                </div>
             </div>
         </div>
 
         <div class="btn-group">
-                <a class="btn btn-secondary" href="spam_activate"> Запустить Спам 🔥</a>
-                <a class="btn btn-secondary" href="spam_deactivate" > Остановить Спам 🛑</a>
+            <a class="btn btn-secondary" href="spam_activate"> Запустить Спам 🔥</a>
+            <a class="btn btn-secondary" href="spam_deactivate"> Остановить Спам 🛑</a>
         </div>
         <p></p>
 
@@ -42,7 +48,8 @@
                             ❌{% endif %}</p>
                         <p class="text-primary">Автоответчик {% if acc.is_auto_answering_active %}
                             ✅{% else %}❌{% endif %}</p>
-                        <p class="card-img"><img class="img-thumbnail" style="width: 15em;" src="{{ MEDIA_URL }}{{ acc.photo }}"
+                        <p class="card-img"><img class="img-thumbnail" style="width: 15em;"
+                                                 src="{{ MEDIA_URL }}{{ acc.photo }}"
                                                  alt="acc image"/></p>
                         <a href="{{ acc.id_account }}" class="btn btn-primary mt-3">Подробнее</a>
                     </div>

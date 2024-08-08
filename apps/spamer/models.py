@@ -53,7 +53,7 @@ class Account(models.Model):
 
     first_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Name')
     last_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Surname')
-    bio = models.CharField(max_length=70, default=None, null=True, blank=True, verbose_name='BIO')
+    bio = models.CharField(max_length=70, default=None, null=True, blank=True, verbose_name='О себе')
     photo = models.ImageField(null=True, blank=True, verbose_name='Photo')
 
     status = models.BooleanField(default=True, verbose_name='Состояние')

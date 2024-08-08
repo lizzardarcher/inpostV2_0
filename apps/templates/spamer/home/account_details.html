@@ -7,8 +7,8 @@
             <div class="row">
                 <div class="col-3">
                     <p class="card-text">Добавлен: {{ account.datetime }}</p>
-                    <h3 class="card-title">{{ account.first_name }} {{ account.last_name }}</h3>
-                    <h3 class="card-title">О себе: {{ account.bio }}</h3>
+                    <h3 class="card-title">{% if account.first_name %}{{ account.first_name }}{% endif %}{% if account.last_name %}{{ account.last_name }}{% endif %}</h3>
+                    <h3 class="card-title">О себе: {% if account.bio %}{{ account.bio }}{% endif %}</h3>
                     <p class="text-primary">Спам {% if account.is_spam_active %}Запущен ✅{% else %}Остановлен
                         ❌{% endif %}</p>
                     <img src="{{ MEDIA_URL }}{{ account.photo }}" class="img-thumbnail" alt="...">

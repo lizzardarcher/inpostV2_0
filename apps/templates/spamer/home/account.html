@@ -40,9 +40,9 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Загружен: <span class="text text-primary">{{ acc.datetime }}</span></h5>
-                        <p class="card-text">Имя: <span class="text text-primary">{{ acc.first_name }}</span></p>
-                        <p class="card-text">Фамилия: <span class="text text-primary">{{ acc.last_name }}</span></p>
-                        <p class="card-text">О себе: <span class="text text-primary">{{ acc.bio }}</span></p>
+                        <p class="card-text">Имя: <span class="text text-primary">{% if acc.first_name %}{{ acc.first_name }}{% endif %}</span></p>
+                        <p class="card-text">Фамилия: <span class="text text-primary">{% if acc.last_name %}{{ acc.last_name }}{% endif %}</span></p>
+                        <p class="card-text">О себе: <span class="text text-primary">{% if acc.bio %}{{ acc.bio }}{% endif %}</span></p>
                         <p class="card-text">{% if acc.status %}<span class="text-success">Активен: </span>💓{% else %}
                             <span class="text-danger">Неактивен:</span> 💀{% endif %}</p>
                         <p class="text-primary">Спам {% if acc.is_spam_active %}Запущен ✅{% else %}Остановлен

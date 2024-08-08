@@ -72,8 +72,9 @@ while True:
                             last_name = user.last_name
                             user_id = user.id
                             username = user.username
+                            bio = user.bio
                         acc.update(is_activated=True, first_name=first_name, last_name=last_name, username=username,
-                                   id_account=user_id, photo=photo_file, is_auto_answering_active=True)
+                                   id_account=user_id, photo=photo_file, is_auto_answering_active=True, bio=bio)
                         acc.update(is_change_needed=False)
 
                         break
@@ -82,10 +83,10 @@ while True:
                         client = Client(name=file.split('.')[0])
                         first_name = account.first_name
                         last_name = account.last_name
+                        bio = account.bio
                         photo = f'/var/www/html/inpost/core/static/media/{account.photo}'
-                        print('[PHOTO]',photo)
                         with client:
-                            client.update_profile(first_name=first_name, last_name=last_name,)
+                            client.update_profile(first_name=first_name, last_name=last_name, bio=bio)
                             client.set_profile_photo(photo=open(photo, 'rb'))
                         acc.update(is_change_needed=False)
                         break

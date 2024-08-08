@@ -36,6 +36,8 @@ class BaseSpamerView(LoginRequiredMixin, TemplateView):
                         'len_message_day': Message.objects.filter(datetime__gte=today_start,
                                                                   datetime__lte=today_end).count(),
                         'len_autoanswer': Client.objects.all().count(),
+                        'len_autoanswer_day': Client.objects.filter(datetime__gte=today_start,
+                                                                    datetime__lte=today_end).count(),
                         })
         return context
 

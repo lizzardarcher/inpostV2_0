@@ -1,4 +1,4 @@
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.auth.models import User, Group
 from django.utils.html import format_html
 
@@ -22,13 +22,6 @@ class GeneralSettingsAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
-
-    # def get_actions(self, request):
-    #     actions = super().get_actions(request)
-    #     if request.user.username[0].upper() != "J":
-    #         if "delete_selected" in actions:
-    #             del actions["delete_selected"]
-    #     return actions
 
 
 class AccountAdmin(admin.ModelAdmin):

@@ -1,4 +1,5 @@
 import os
+import traceback
 from time import sleep
 
 import django
@@ -58,6 +59,7 @@ while True:
                         with client:
                             # Получаем информацию о пользователе
                             user = client.get_me()
+                            print(user)
                             try:
                                 profile_photo = user.photo.big_file_id
                                 # Download the photo
@@ -72,7 +74,10 @@ while True:
                             last_name = user.last_name
                             user_id = user.id
                             username = user.username
-                            bio = user.bio
+                            try:
+                                bio = user.bio
+                            except AttributeError:
+                                bio = None
                         acc.update(is_activated=True, first_name=first_name, last_name=last_name, username=username,
                                    id_account=user_id, photo=photo_file, is_auto_answering_active=True, bio=bio)
                         acc.update(is_change_needed=False)
@@ -100,7 +105,7 @@ while True:
                     # todo GeneralSettings handler
                     # GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
         except:
-            pass
+            print(traceback.format_exc())
         # todo GeneralSettings handler
         # GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
     sleep(5)

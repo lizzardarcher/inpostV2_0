@@ -4,9 +4,9 @@
 {% block content %}
     <div class="p-2 mt-3">
         {% if spam_active %}
-            <h4 class="p-3 bg-info col-4 rounded text-dark">Спам Запущен 🔥🔥🔥 (аккаунтов в работе {{ spam_active }})</h4>
+            <h4 class="p-3 bg-info col-lg-6 col-sm-12 rounded text-dark">Спам Запущен 🔥🔥🔥 (аккаунтов в работе {{ spam_active }})</h4>
         {% else %}
-            <h4 class="p-3 bg-warning col-4 rounded text-dark">Спам Остановлен 🛑</h4>
+            <h4 class="p-3 bg-warning col-lg-6 col-sm-12 rounded text-dark">Спам Остановлен 🛑</h4>
         {% endif %}
         <div class="row">
             <div class="col-12">
@@ -35,14 +35,17 @@
     </div>
     <div class="row mt-3">
         {% for acc in accounts %}
-            <div class="col-sm-3 mb-3 mb-sm-0">
+            <div class="col-sm-2 mb-3 mb-sm-0">
 
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Загружен: <span class="text text-primary">{{ acc.datetime }}</span></h5>
-                        <p class="card-text">Имя: <span class="text text-primary">{% if acc.first_name %}{{ acc.first_name }}{% endif %}</span></p>
-                        <p class="card-text">Фамилия: <span class="text text-primary">{% if acc.last_name %}{{ acc.last_name }}{% endif %}</span></p>
-                        <p class="card-text">О себе: <span class="text text-primary">{% if acc.bio %}{{ acc.bio }}{% endif %}</span></p>
+                        <h5 class="card-title">Добавлен: <span class="text text-primary">{{ acc.datetime }}</span></h5>
+                        <p class="card-text">Имя: <span class="text text-primary">{% if acc.first_name %}
+                            {{ acc.first_name }}{% endif %}</span></p>
+                        <p class="card-text">Фамилия: <span class="text text-primary">{% if acc.last_name %}
+                            {{ acc.last_name }}{% endif %}</span></p>
+                        <p class="card-text">О себе: <span class="text text-primary">{% if acc.bio %}
+                            {{ acc.bio }}{% endif %}</span></p>
                         <p class="card-text">{% if acc.status %}<span class="text-success">Активен: </span>💓{% else %}
                             <span class="text-danger">Неактивен:</span> 💀{% endif %}</p>
                         <p class="text-primary">Спам {% if acc.is_spam_active %}Запущен ✅{% else %}Остановлен
@@ -52,13 +55,37 @@
                         <p class="card-img"><img class="img-thumbnail" style="width: 15em;"
                                                  src="{{ MEDIA_URL }}{{ acc.photo }}"
                                                  alt="acc image"/></p>
-                        <a href="{{ acc.id_account }}" class="btn btn-primary mt-3">Подробнее</a>
+                        <a href="{{ acc.id_account }}" class="btn btn-simple btn-primary">Подробнее <i
+                                class="fa fa-angle-double-right"></i></a>
                     </div>
 
                     <div class="p-3">
-                        <a href="{{ acc.id_account }}/update/">Редактировать <i class="fa fa-edit"></i> </a>
-                        ||
-                        <a href="{{ acc.id_account }}/delete/"> Удалить <i class="fa fa-trash"></i></a>
+                        <a class="btn btn-warning" href="{{ acc.id_account }}/update/"><i class="fa fa-edit"></i> </a>
+                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                data-target="#Modal{{ acc.id_account }}">
+                            <i class="fa fa-trash"></i></a>
+                        </button>
+                        <div class="modal fade" id="Modal{{ acc.id_account }}" tabindex="-1" role="dialog"
+                             aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content bg-info">
+                                    <div class="modal-header">
+                                        <h3 class="modal-title" id="exampleModalLabel">Удаление</h3>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            <i class="tim-icons icon-simple-remove"></i>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Вы действительно хотите удалить аккаунт *{{ acc.first_name }}* из базы?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
+                                        </button>
+                                        <a class="btn-danger btn" href="{{ acc.id_account }}/delete/">Подтвердить</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                 </div>

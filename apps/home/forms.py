@@ -15,7 +15,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['name', 'text', 'template',
+        fields = ['name', 'text', 'is_autosend', 'send_time_to_channels','send_time_to_chats','delay','delay_chat','template',
                   'photo_1', 'photo_2', 'photo_3', 'photo_4', 'photo_5',
                   'music', 'video', 'document', 'url', 'url_text',
                   'btn_name_1', 'btn_name_2', 'btn_name_3', 'btn_name_4',
@@ -24,6 +24,11 @@ class PostForm(forms.ModelForm):
             'name': forms.TextInput(
                 attrs={'class': 'form-control', 'placeholder': 'Озаглавьте ваш пост, для более удобного управления'}),
             'text': forms.Textarea(attrs={'class': 'form-text', 'style': 'color:black;', 'cols': '60'}),
+            'is_autosend': forms.CheckboxInput(),
+            'send_time_to_channels': forms.DateTimeInput(attrs={'class': 'form-control','type': 'datetime-local' }),
+            'delay': forms.NumberInput(attrs={'class': 'form-control'}),
+            'send_time_to_chats': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'delay_chat': forms.NumberInput(attrs={'class': 'form-control'}),
             'photo_1': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'photo_2': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'photo_3': forms.ClearableFileInput(attrs={'class': 'form-control'}),

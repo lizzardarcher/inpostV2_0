@@ -4,13 +4,14 @@
 {% block content %}
     <div class="p-2 mt-3">
         {% if spam_active %}
-            <h4 class="p-3 bg-info col-lg-6 col-sm-12 rounded text-dark">Спам Запущен 🔥🔥🔥 (аккаунтов в работе {{ spam_active }})</h4>
+            <h4 class="p-3 bg-info col-lg-6 col-sm-12 rounded text-dark">Спам Запущен 🔥🔥🔥 (аккаунтов в
+                работе {{ spam_active }})</h4>
         {% else %}
             <h4 class="p-3 bg-warning col-lg-6 col-sm-12 rounded text-dark">Спам Остановлен 🛑</h4>
         {% endif %}
         <div class="row">
             <div class="col-12">
-                <h2 class="d-inline-block">Мои Аккаунты</h2>
+                <h2 class="d-inline-block">Мои Аккаунты</h2><br>
                 <a href="upload" class="btn btn-primary">+ Добавить Акк</a>
 
                 <div class="btn-group" role="group" aria-label="Basic example">
@@ -58,9 +59,9 @@
                         <a href="{{ acc.id_account }}" class="btn btn-simple btn-primary">Подробнее <i
                                 class="fa fa-angle-double-right"></i></a>
                     </div>
-
                     <div class="p-3">
                         <a class="btn btn-warning" href="{{ acc.id_account }}/update/"><i class="fa fa-edit"></i> </a>
+
                         <button type="button" class="btn btn-danger" data-toggle="modal"
                                 data-target="#Modal{{ acc.id_account }}">
                             <i class="fa fa-trash"></i></a>
@@ -86,6 +87,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                 </div>

@@ -75,9 +75,9 @@
 
                                     <div class="col-sm-4">
                                         {% if post.is_autosend %}
-                                            <p>Следующая отправка:<br> <code>{{ post.send_time_to_channels }}</code></p>
+                                            <p>След отправка в каналы:<br> <code>{{ post.send_time_to_channels }}</code></p>
                                             <p>Задержка: <code>{{ post.delay }}</code>(мин)</p>
-                                            <p>Следующая отправка:<br> <code>{{ post.send_time_to_chats }}</code></p>
+                                            <p>След отправка в группы:<br> <code>{{ post.send_time_to_chats }}</code></p>
                                             <p>Задержка: <code>{{ post.delay_chat }}</code>(мин)</p>
                                         {% else %}
                                         {% endif %}

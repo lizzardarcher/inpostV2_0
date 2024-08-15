@@ -5,27 +5,27 @@
     <div class="card col-12 mt-3">
         <div class="card-body">
             <div class="row">
-                <div class="col-3">
+                <div class="col-md-3 col-sm-12">
+                    <h3 class="card-title">Отправлено <code>{{ message_count }}</code> сообщений</h3>
                     <p class="card-text">Добавлен: {{ account.datetime }}</p>
                     <h3 class="card-title">{% if account.first_name %}{{ account.first_name }}{% endif %}{% if account.last_name %}{{ account.last_name }}{% endif %}</h3>
                     <h3 class="card-title">О себе: {% if account.bio %}{{ account.bio }}{% endif %}</h3>
-                    <p class="text-primary">Спам {% if account.is_spam_active %}Запущен ✅{% else %}Остановлен
-                        ❌{% endif %}</p>
                     <img src="{{ MEDIA_URL }}{{ account.photo }}" class="img-thumbnail" alt="...">
                     <p class="card-text">ID: <code>{{ account.id_account }}</code></p>
 
                 </div>
-                <div class="col-5">
-                    <p class="card-text">Текст для рассылки по чатам:</p>
+                <div class="col-md-5 col-sm-12">
+                    <p class="card-text">Текст для рассылки по чатам: (<span class="text-primary">Спам {% if account.is_spam_active %}Запущен ✅{% else %}Остановлен
+                        ❌{% endif %}</span>)</p>
                     {% if account.media %}
                         <img src="{{ MEDIA_URL }}{{ account.media }}" class="img-thumbnail" alt="...">{% endif %}
                     <p class="card-text"><code>{{ account.common_text_ref.text }}</code></p>
-                    <p class="card-text">Текст автоответчика: (<span class="text-primary">автоответчик
+                    <p class="card-text">Текст автоответчика: (<span class="text-primary">Автоответчик
                         {% if account.is_auto_answering_active %}
                             ✅{% else %}❌{% endif %}</span>)</p>
                     <p class="card-text"><code>{{ account.auto_answering_text_ref.text }}</code></p>
                 </div>
-                <div class="col-4">
+                <div class="col-md-4 col-sm-12">
                     <p class="card-text">Задержка: <code>{{ account.delay }}</code> (мин.)</p>
                     <p><a href="/spm/accs/{{ account.id_account }}/update/">Редактировать <i class="fa fa-edit"></i></a>
                     </p>

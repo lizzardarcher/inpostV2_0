@@ -26,10 +26,10 @@ class GeneralSettingsAdmin(admin.ModelAdmin):
 
 class AccountAdmin(admin.ModelAdmin):
     list_display = (
-        'datetime', 'username', 'phone', 'status', 'is_spam_active', 'delay', 'is_spam_lk_active')
-    list_display_links = ('datetime', 'username', 'phone', 'status', 'is_spam_active', 'delay', 'is_spam_lk_active')
-    search_fields = ('username',)
-
+        'datetime', 'first_name','last_name', 'status', 'is_spam_active', 'delay', 'is_spam_lk_active')
+    list_display_links = ('first_name','last_name',)
+    search_fields = ('first_name',)
+    empty_value_display = '...'
 
 class MessageAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):

@@ -23,21 +23,34 @@ from apps.home.utils import get_chat_info
 class BaseSpamerView(LoginRequiredMixin, TemplateView):
     template_name = "spamer/home/index.html"
 
+
     def get_context_data(self, **kwargs):
-        today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
-        today_end = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
+        acc_ids = [x.id_account for x in Account.objects.all()]
+        # today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
+        # today_end = timezone.now().replace(hour=23, minute=59, second=59, microsecond=999999)
+        today_start = timezone.now() - timezone.timedelta(days=1)
+        today_end = timezone.now()
         context = super(BaseSpamerView, self).get_context_data(**kwargs)
         context.update({'segment': 'spm',
+                        'spm_segment': 'stats',
                         'len_account': Account.objects.filter(user=self.request.user).count(),
                         'len_account_active': Account.objects.filter(user=self.request.user, status=True).count(),
                         'len_chat': Chat.objects.filter(user=self.request.user).count(),
                         'len_chat_active': Chat.objects.filter(user=self.request.user, is_active=True).count(),
-                        'len_message': Message.objects.all().count(),
+                        'len_message': Message.objects.all().order_by('id').count(),
                         'len_message_day': Message.objects.filter(datetime__gte=today_start,
-                                                                  datetime__lte=today_end).count(),
+                                                                  datetime__lte=today_end).order_by('id').count(),
                         'len_autoanswer': Client.objects.all().count(),
                         'len_autoanswer_day': Client.objects.filter(datetime__gte=today_start,
                                                                     datetime__lte=today_end).count(),
+                        'len_for_acc':
+                            [{'name': Account.objects.filter(id_account=x).last(),
+                              'count_total': Message.objects.filter(account=Account.objects.filter(id_account=x).last()).count(),
+                              'count_day': Message.objects.filter(account=Account.objects.filter(id_account=x).last(),
+                                                                  datetime__gte=today_start,
+                                                                  datetime__lte=today_end).count()
+                              }
+                             for x in acc_ids],
                         })
         return context
 
@@ -57,7 +70,8 @@ class AccountListView(LoginRequiredMixin, ListView):
         context = super(AccountListView, self).get_context_data(**kwargs)
         context.update({'segment': 'spm',
                         'spm_segment': 'account',
-                        'spam_active': Account.objects.filter(is_spam_active=True, status=True).count(), })
+                        'spam_active': Account.objects.filter(is_spam_active=True, status=True).count(),
+                        })
         return context
 
 
@@ -68,7 +82,11 @@ class AccountDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(AccountDetailView, self).get_context_data(**kwargs)
-        context.update({'segment': 'spm', 'spm_segment': 'account'})
+        context.update({'segment': 'spm',
+                        'spm_segment': 'account',
+                        'message_count': Message.objects.filter(account=Account.objects.filter(
+                            id_account=int(self.request.path.split('/')[-2])).last()).count()
+                        })
         return context
 
 

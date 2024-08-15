@@ -37,27 +37,25 @@ async def main():
     """ Автоответчик """
 
     """ Пул сессий """
-    apps = [Client(x.session.name.split('/')[-1].split('.')[0]) for x in Account.objects.filter(status=True)]
+    apps = [Client(x.session.name.split('/')[-1].split('.')[0]) for x in Account.objects.filter(status=True).order_by('first_name')]
 
-    """ Активируем клиенты pyrogram с помощью compose() """
     for app in apps:
-
-        @app.on_message(filters.text & filters.private and not filters.bot and not filters.me
-                        or filters.text & filters.private & filters.reply and not filters.bot)
+        logger.info(f'[{app.name}] [started]')
+        @app.on_message(filters.text & filters.private)
         async def answer_(client, message):
-            # logger.info(message)
-            tg_cli = Tg_client.objects.filter(user_id=message.from_user.id)
+            account = Account.objects.filter(session=f'sessions/{client.name}.session').last()
+            tg_cli = Tg_client.objects.filter(user_id=message.from_user.id, account=account)
+            logger.info(f'[{message.text}] [{account}]')
 
             """
                 * Ответ пользователю
                 * Создание объекта клиента
             """
             if not tg_cli:
-                account = Account.objects.filter(session=f'sessions/{client.name}.session').last()
                 text = account.auto_answering_text_ref.text
                 if not text:
                     text = GeneralSettings.objects.get(pk=1).general_auto_answering
-                await asyncio.sleep(10)
+                await asyncio.sleep(0.1)
                 await client.send_message(message.chat.id, text)
                 user_id = message.from_user.id
                 username = message.from_user.username
@@ -67,7 +65,8 @@ async def main():
                 Tg_client.objects.create(user_id=user_id, username=username, first_name=first_name, last_name=last_name,
                                          account=account)
 
-    await compose(apps)
+    """ Активируем клиенты pyrogram с помощью compose() """
+    await compose(apps, False)
 
 if __name__ == '__main__':
     asyncio.run(main())

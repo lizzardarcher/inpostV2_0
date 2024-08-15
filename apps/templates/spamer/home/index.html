@@ -16,7 +16,7 @@
                         <div class="col-7">
                             <div class="numbers">
                                 <p class="card-category">Аккаунты</p>
-                                <h3 class="card-title">{{ len_account }}</h3>
+                                <h3 class="card-title"><code>{{ len_account }}</code></h3>
                             </div>
                         </div>
                     </div>
@@ -24,7 +24,7 @@
                 <div class="card-footer">
                     <hr>
                     <div class="stats">
-                        <i class="fa fa-check-circle"></i> Активных: {{ len_account_active }}
+                        <i class="fa fa-check-circle"></i> Активных: <code>{{ len_account_active }}</code>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                         <div class="col-7">
                             <div class="numbers">
                                 <p class="card-category">Отправлено постов за сутки</p>
-                                <h3 class="card-title">{{ len_message_day }}</h3>
+                                <h3 class="card-title"><code>{{ len_message_day }}</code></h3>
                             </div>
                         </div>
                     </div>
@@ -49,8 +49,9 @@
                 <div class="card-footer">
                     <hr>
                     <div class="stats">
-                        <i class="tim-icons icon-chat-33"></i> С начала пользования: {{ len_message }}
+                        <i class="tim-icons icon-chat-33"></i> С начала пользования: <code>{{ len_message }}</code>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -66,7 +67,7 @@
                         <div class="col-7">
                             <div class="numbers">
                                 <p class="card-category">Чатов</p>
-                                <h3 class="card-title">{{ len_chat }}</h3>
+                                <h3 class="card-title"><code>{{ len_chat }}</code></h3>
                             </div>
                         </div>
                     </div>
@@ -74,7 +75,7 @@
                 <div class="card-footer">
                     <hr>
                     <div class="stats">
-                        <i class="fa fa-check-circle"></i> Активных: {{ len_chat_active }}
+                        <i class="fa fa-check-circle"></i> Активных: <code>{{ len_chat_active }}</code>
                     </div>
                 </div>
             </div>
@@ -91,7 +92,7 @@
                         <div class="col-7">
                             <div class="numbers">
                                 <p class="card-category">Автоответчик</p>
-                                <h3 class="card-title">{{ len_autoanswer }}</h3>
+                                <h3 class="card-title"><code>{{ len_autoanswer }}</code></h3>
                             </div>
                         </div>
                     </div>
@@ -99,11 +100,37 @@
                 <div class="card-footer">
                     <hr>
                     <div class="stats">
-                        <i class="tim-icons icon-watch-time"></i> За последние сутки: {{ len_autoanswer_day }}
+                        <i class="tim-icons icon-watch-time"></i> За последние сутки:
+                        <code>{{ len_autoanswer_day }}</code>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="col-lg-5 col-12">
+        <div class="card card-stats">
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <td>Аккаунты</td>
+                        <td>Всего</td>
+                        <td>Сутки</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for a in len_for_acc %}
+                        <tr>
+                            <td>{{ a.name }}</td>
+                            <td><code>{{ a.count_total }}</code></td>
+                            <td><code>{{ a.count_day }}</code></td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     </div>
 {% endblock content %}
 

@@ -7,9 +7,10 @@ from pathlib import Path
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
 from django.template import loader
+from django import forms
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import (ListView, DeleteView, UpdateView, CreateView, TemplateView, DetailView)
+from django.views.generic import (ListView, DeleteView, UpdateView, CreateView, TemplateView, DetailView, View)
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.forms import modelformset_factory
@@ -19,7 +20,7 @@ from django.http import HttpResponseRedirect
 
 from .models import *
 from .forms import *
-from .calendar import PostCalendar, PostCalendarAdmin
+from .calendar import PostCalendar, PostCalendarAdmin, PostCalendarAdminDetail
 from .calendar_mini import PostCalendarMini, PostCalendarMiniAdmin
 from .utils import get_chat_info, get_bot_info
 from ..middleware import current_user
@@ -83,7 +84,7 @@ class AdminPageUserDetailsView(SuccessMessageMixin, LoginRequiredMixin, Template
             'bots': Bot.objects.all(),
             'posts': Post.objects.all(),
             'chats': Chat.objects.all(),
-            'cal': PostCalendarAdmin().formatmonth(theyear=int(datetime.now().year),
+            'cal_user': PostCalendarAdminDetail(user=int(self.request.path.split('/')[-1])).formatmonth(theyear=int(datetime.now().year),
                                                    themonth=int(datetime.now().month))
         })
         return context
@@ -246,6 +247,26 @@ class CalendarAdminEventCreate(SuccessMessageMixin, LoginRequiredMixin, CreateVi
     def form_valid(self, form):
         # self.object = form.save(commit=False)
         # form.instance.user = self.request.user
+        return super().form_valid(form)
+
+class CalendarAdminUserEventCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    model = PostSchedule
+    form_class = PostScheduleAdminUserForm
+    template_name = 'crud/calendar_event_create_admin.html'
+    success_message = 'Расписание обновлено'
+
+    def get_success_url(self):
+        return f'/admin_page/user_details/{self.object.user.id}'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalendarAdminUserEventCreate, self).get_context_data(**kwargs)
+        # context['name'] = self.request.GET.get('name')
+        # context['sch'] = PostSchedule.objects.filter(user=self.request.user)
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        form.instance.user = User.objects.get(id=self.request.user.id)
         return super().form_valid(form)
 
 

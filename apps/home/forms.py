@@ -2,6 +2,7 @@ from django import forms
 
 from betterforms.multiform import MultiModelForm
 from django_quill.forms import QuillFormField
+from urllib3 import request
 
 from .models import *
 from ..middleware import current_user
@@ -142,6 +143,22 @@ class PostScheduleAdminForm(forms.ModelForm):
     # def __init__(self, *args, **kwargs):
     #     super(PostScheduleAdminForm, self).__init__(*args, **kwargs)
     #     post_set = Post.objects.filter(user_id=current_user.get_current_user_id())
+    #     self.fields['post'].queryset = post_set
+
+class PostScheduleAdminUserForm(forms.ModelForm):
+    class Meta:
+        model = PostSchedule
+        fields = ['post', 'schedule', 'is_sent']
+        widgets = {
+            'post': forms.Select(attrs={'class': 'form-control text-info bg-dark '}),
+            'schedule': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
+            'is_sent': forms.HiddenInput(attrs={'value': ''}),
+        }
+
+    # def __init__(self,user, *args, **kwargs):
+    #     super(PostScheduleAdminUserForm, self).__init__(user, *args, **kwargs)
+    #     self.user = user
+    #     post_set = Post.objects.filter(user=User.objects.filter(username=self.user).last())
     #     self.fields['post'].queryset = post_set
 
 

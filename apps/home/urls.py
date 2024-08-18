@@ -77,10 +77,12 @@ urlpatterns = [
     path('calendar_admin/<int:year>/<int:month>/', views.CalendarAdminView.as_view(), name='calendar admin'),
     path('calendar_event_create/<int:year>/<int:month>/<int:day>/', views.CalendarEventCreate.as_view(), name='calendar event create'),
     path('calendar_event_create_admin/<int:year>/<int:month>/<int:day>/', views.CalendarAdminEventCreate.as_view(), name='calendar event admin create'),
+    path('calendar_event_create_admin_user/<int:year>/<int:month>/<int:day>/', views.CalendarAdminUserEventCreate.as_view(), name='calendar event admin user create'),
     path('calendar_event_create_multiple/<int:year>/<int:month>/<int:day>/', views.CalendarEventMultipleCreate.as_view(), name='calendar event create multiple'),
 
     path('schedule_update/<int:pk>', views.ScheduleUpdateView.as_view(), name='update schedule'),
     path('schedule_update_admin/<int:pk>', views.ScheduleUpdateAdminView.as_view(), name='update admin schedule'),
+    path('schedule_update_admin_user/<int:pk>', views.ScheduleUpdateAdminView.as_view(), name='update admin user schedule'),
     path('schedule_delete/<int:pk>', views.ScheduleDeleteView.as_view(), name='delete schedule'),
 
 ]

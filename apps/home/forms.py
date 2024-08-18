@@ -127,6 +127,24 @@ class PostScheduleForm(forms.ModelForm):
         post_set = Post.objects.filter(user_id=current_user.get_current_user_id())
         self.fields['post'].queryset = post_set
 
+class PostScheduleAdminForm(forms.ModelForm):
+    class Meta:
+        model = PostSchedule
+        fields = ['post', 'user','schedule', 'is_sent']
+        widgets = {
+            'post': forms.Select(attrs={'class': 'form-control text-info bg-dark '}),
+            'user': forms.Select(attrs={'class': 'form-control text-info bg-dark '}),
+            # 'post': forms.ModelChoiceField(attrs={'class': 'form-control text-info'}),
+            'schedule': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
+            'is_sent': forms.HiddenInput(attrs={'value': ''}),
+        }
+
+
+    # def __init__(self, *args, **kwargs):
+    #     super(PostScheduleAdminForm, self).__init__(*args, **kwargs)
+        # post_set = Post.objects.filter(user_id=current_user.get_current_user_id())
+        # self.fields['post'].queryset = post_set
+
 
 class PostScheduleMultipleForm(forms.ModelForm):
     class Meta:

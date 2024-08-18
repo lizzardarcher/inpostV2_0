@@ -10,7 +10,7 @@ from django.template import loader
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import (ListView, DeleteView, UpdateView, CreateView, TemplateView, DetailView)
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.forms import modelformset_factory
 from django.contrib.auth.decorators import login_required
@@ -19,8 +19,8 @@ from django.http import HttpResponseRedirect
 
 from .models import *
 from .forms import *
-from .calendar import PostCalendar
-from .calendar_mini import PostCalendarMini
+from .calendar import PostCalendar, PostCalendarAdmin
+from .calendar_mini import PostCalendarMini, PostCalendarMiniAdmin
 from .utils import get_chat_info, get_bot_info
 from ..middleware import current_user
 
@@ -30,12 +30,15 @@ from ..middleware import current_user
 class AdminPageView(SuccessMessageMixin, LoginRequiredMixin, ListView):
     template_name = 'admin/admin_page.html'
     queryset = {}
-
     def get_context_data(self, **kwargs):
         context = super(AdminPageView, self).get_context_data(**kwargs)
         context.update({
             'users': User.objects.all(),
             'user_status': UserStatus.objects.all(),
+            'cal_mini': PostCalendarMiniAdmin().formatmonth(theyear=int(datetime.now().year),
+                                                       themonth=int(datetime.now().month)),
+            'cal' : PostCalendarAdmin().formatmonth(theyear=int(datetime.now().year),
+                                                    themonth=int(datetime.now().month))
         })
         return context
 
@@ -620,6 +623,42 @@ def calendar_event(request, year, month, day):
     })
 
 
+class CalendarAdminView(LoginRequiredMixin, TemplateView):
+    template_name = 'home/calendar.html'
+
+    def get(self, request, year, month, *args, **kwargs):
+        cal = PostCalendarAdmin().formatmonth(theyear=int(year), themonth=int(month))
+        cal_mini = PostCalendarMiniAdmin().formatmonth(theyear=int(year), themonth=int(month))
+        context = {'cal': cal, 'cal_mini': cal_mini, 'segment': 'calendar'}
+        return render(request, 'home/calendar.html', context=context)
+
+    def post(self, request, year, month, *args, **kwargs):
+        cal = PostCalendarAdmin().formatmonth(theyear=int(year), themonth=int(month))
+        cal_mini = PostCalendarMiniAdmin().formatmonth(theyear=int(year), themonth=int(month))
+        context = {'cal': cal, 'cal_mini': cal_mini, 'segment': 'calendar'}
+        return render(request, 'home/calendar.html', context=context)
+
+    # def form_valid(self, form):
+    #     form.instance.user = self.request.user
+    #     return super().form_valid(form)
+
+
+def calendar_event(request, year, month, day):
+    post = Post.objects.filter(user=request.user).last()
+    form = PostScheduleForm(request.POST, instance=post)
+    if form.is_valid():
+        # print(form)
+        form.save()
+        messages.success(request, "Успешно обновлено")
+        # return redirect(f"/calendar/{datetime.now().year}/{datetime.now().month}/")
+    return render(request, 'home/calendar_event.html', context={
+        'posts': post,
+        'year': year,
+        'month': month,
+        'day': day
+    })
+
+
 class CalendarEventCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = PostSchedule
     form_class = PostScheduleForm
@@ -636,6 +675,25 @@ class CalendarEventCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+class CalendarAdminEventCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    model = PostSchedule
+    form_class = PostScheduleAdminForm
+    template_name = 'crud/calendar_event_create_admin.html'
+    success_url = f'/admin_page'
+    success_message = 'Распиание обновлено'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalendarAdminEventCreate, self).get_context_data(**kwargs)
+        # context['name'] = self.request.GET.get('name')
+        # context['sch'] = PostSchedule.objects.filter(user=self.request.user)
+        return context
+
+    def form_valid(self, form):
+        # self.object = form.save(commit=False)
+        # form.instance.user = self.request.user
         return super().form_valid(form)
 
 
@@ -667,6 +725,17 @@ class ScheduleUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     template_name = 'crud/schedule_update.html'
     form_class = PostScheduleForm
     success_url = f'/calendar/{datetime.now().year}/{datetime.now().month}/'
+    success_message = 'Расписание обновлено'
+
+    def form_valid(self, form):
+        form.instance.is_sent = False
+        return super().form_valid(form)
+
+class ScheduleUpdateAdminView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    model = PostSchedule
+    template_name = 'crud/schedule_update.html'
+    form_class = PostScheduleAdminForm
+    success_url = f'/calendar_admin/{datetime.now().year}/{datetime.now().month}/'
     success_message = 'Расписание обновлено'
 
     def form_valid(self, form):

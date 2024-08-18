@@ -30,15 +30,16 @@ from ..middleware import current_user
 class AdminPageView(SuccessMessageMixin, LoginRequiredMixin, ListView):
     template_name = 'admin/admin_page.html'
     queryset = {}
+
     def get_context_data(self, **kwargs):
         context = super(AdminPageView, self).get_context_data(**kwargs)
         context.update({
             'users': User.objects.all(),
             'user_status': UserStatus.objects.all(),
             'cal_mini': PostCalendarMiniAdmin().formatmonth(theyear=int(datetime.now().year),
-                                                       themonth=int(datetime.now().month)),
-            'cal' : PostCalendarAdmin().formatmonth(theyear=int(datetime.now().year),
-                                                    themonth=int(datetime.now().month))
+                                                            themonth=int(datetime.now().month)),
+            'cal': PostCalendarAdmin().formatmonth(theyear=int(datetime.now().year),
+                                                   themonth=int(datetime.now().month))
         })
         return context
 
@@ -193,6 +194,57 @@ class AdminPageChatDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteVie
     success_url = '/admin_page'
     template_name = 'crud/chat_delete.html'
     success_message = 'Чат успешно удалён'
+
+
+class ScheduleUpdateAdminView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    model = PostSchedule
+    template_name = 'crud/calendar_event_create_admin.html'
+    form_class = PostScheduleAdminForm
+    success_url = f'/calendar_admin/{datetime.now().year}/{datetime.now().month}/'
+    success_message = 'Расписание обновлено'
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        if form.cleaned_data['post'].user == form.cleaned_data['user']:
+            form.instance.is_sent = False
+            return super().form_valid(form)
+
+
+class CalendarAdminView(LoginRequiredMixin, TemplateView):
+    template_name = 'home/calendar.html'
+
+    def get(self, request, year, month, *args, **kwargs):
+        cal = PostCalendarAdmin().formatmonth(theyear=int(year), themonth=int(month))
+        cal_mini = PostCalendarMiniAdmin().formatmonth(theyear=int(year), themonth=int(month))
+        context = {'cal': cal, 'cal_mini': cal_mini, 'segment': 'calendar'}
+        return render(request, 'home/calendar.html', context=context)
+
+    def post(self, request, year, month, *args, **kwargs):
+        cal = PostCalendarAdmin().formatmonth(theyear=int(year), themonth=int(month))
+        cal_mini = PostCalendarMiniAdmin().formatmonth(theyear=int(year), themonth=int(month))
+        context = {'cal': cal, 'cal_mini': cal_mini, 'segment': 'calendar'}
+        return render(request, 'home/calendar.html', context=context)
+
+
+class CalendarAdminEventCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    model = PostSchedule
+    form_class = PostScheduleAdminForm
+    template_name = 'crud/calendar_event_create_admin.html'
+    success_url = f'/admin_page'
+    success_message = 'Распиание обновлено'
+
+    def get_context_data(self, **kwargs):
+        context = super(CalendarAdminEventCreate, self).get_context_data(**kwargs)
+        # context['name'] = self.request.GET.get('name')
+        # context['sch'] = PostSchedule.objects.filter(user=self.request.user)
+        return context
+
+    def form_valid(self, form):
+        # self.object = form.save(commit=False)
+        # form.instance.user = self.request.user
+        return super().form_valid(form)
 
 
 # USER ##############################################
@@ -623,26 +675,6 @@ def calendar_event(request, year, month, day):
     })
 
 
-class CalendarAdminView(LoginRequiredMixin, TemplateView):
-    template_name = 'home/calendar.html'
-
-    def get(self, request, year, month, *args, **kwargs):
-        cal = PostCalendarAdmin().formatmonth(theyear=int(year), themonth=int(month))
-        cal_mini = PostCalendarMiniAdmin().formatmonth(theyear=int(year), themonth=int(month))
-        context = {'cal': cal, 'cal_mini': cal_mini, 'segment': 'calendar'}
-        return render(request, 'home/calendar.html', context=context)
-
-    def post(self, request, year, month, *args, **kwargs):
-        cal = PostCalendarAdmin().formatmonth(theyear=int(year), themonth=int(month))
-        cal_mini = PostCalendarMiniAdmin().formatmonth(theyear=int(year), themonth=int(month))
-        context = {'cal': cal, 'cal_mini': cal_mini, 'segment': 'calendar'}
-        return render(request, 'home/calendar.html', context=context)
-
-    # def form_valid(self, form):
-    #     form.instance.user = self.request.user
-    #     return super().form_valid(form)
-
-
 def calendar_event(request, year, month, day):
     post = Post.objects.filter(user=request.user).last()
     form = PostScheduleForm(request.POST, instance=post)
@@ -675,25 +707,6 @@ class CalendarEventCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         form.instance.user = self.request.user
-        return super().form_valid(form)
-
-
-class CalendarAdminEventCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView):
-    model = PostSchedule
-    form_class = PostScheduleAdminForm
-    template_name = 'crud/calendar_event_create_admin.html'
-    success_url = f'/admin_page'
-    success_message = 'Распиание обновлено'
-
-    def get_context_data(self, **kwargs):
-        context = super(CalendarAdminEventCreate, self).get_context_data(**kwargs)
-        # context['name'] = self.request.GET.get('name')
-        # context['sch'] = PostSchedule.objects.filter(user=self.request.user)
-        return context
-
-    def form_valid(self, form):
-        # self.object = form.save(commit=False)
-        # form.instance.user = self.request.user
         return super().form_valid(form)
 
 
@@ -731,16 +744,6 @@ class ScheduleUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         form.instance.is_sent = False
         return super().form_valid(form)
 
-class ScheduleUpdateAdminView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
-    model = PostSchedule
-    template_name = 'crud/schedule_update.html'
-    form_class = PostScheduleAdminForm
-    success_url = f'/calendar_admin/{datetime.now().year}/{datetime.now().month}/'
-    success_message = 'Расписание обновлено'
-
-    def form_valid(self, form):
-        form.instance.is_sent = False
-        return super().form_valid(form)
 
 class ScheduleDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
     model = PostSchedule

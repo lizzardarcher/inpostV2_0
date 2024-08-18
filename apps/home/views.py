@@ -742,7 +742,6 @@ class ScheduleUpdateAdminView(SuccessMessageMixin, LoginRequiredMixin, UpdateVie
         form.instance.is_sent = False
         return super().form_valid(form)
 
-
 class ScheduleDeleteView(SuccessMessageMixin, LoginRequiredMixin, DeleteView):
     model = PostSchedule
     success_url = f'/calendar/{datetime.now().year}/{datetime.now().month}/'

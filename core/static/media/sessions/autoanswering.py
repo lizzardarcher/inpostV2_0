@@ -1,32 +1,24 @@
 import asyncio
-import random
 import sqlite3
-import string
 import sys
-from time import sleep
-import datetime
-import json
-import traceback
 import logging
-import re
-from pyrogram import Client, compose, idle, filters
-from pyrogram.handlers import MessageHandler
+
+from django.conf import settings
+from pyrogram import Client, compose, filters
 import os
 import django
-from pyrogram.enums import ParseMode
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'core.settings'
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 django.setup()
 
-from apps.spamer.models import Account, Bot, TGAdmin, Chat, GeneralSettings, \
-    Message, MasterAccount, ChatMaster, ChannelToSubscribe, AccountLogging
+from apps.spamer.models import Account, GeneralSettings
 from apps.spamer.models import Client as Tg_client
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format='%(asctime)s %(levelname) -8s %(message)s',
-    level=logging.INFO,
+    level=settings.LOG_LEVEL,
     datefmt='%Y.%m.%d %I:%M:%S',
     handlers=[
         logging.StreamHandler(stream=sys.stderr)
@@ -43,21 +35,23 @@ async def main():
 
     for app in apps:
 
-        # @app.on_message()
-        # async def random_shit_handler(client, message):
-        #     logger.info(f'{message.text}')
-
         @app.on_message(filters.text & filters.private)
         async def auto_answering_handler(client, message):
             account = Account.objects.filter(session=f'sessions/{client.name}.session').last()
-            tg_cli = Tg_client.objects.filter(user_id=message.from_user.id, account=account)
-            logger.info(f'[{message.text}] [{account}]')
+            tg_cli = Tg_client.objects.filter(user_id=message.from_user.id, account=account).last()
+            logger.info(f'[{message.text}] [{account}] [{tg_cli}] [NOT AUTOANSWERING]')
 
             """
                 * Ответ пользователю
                 * Создание объекта клиента
             """
+            try:
+                if tg_cli.first_name == 'Admin66':
+                    await client.send_message(message.chat.id, '[DEBUG] [AUTOANSWERING]')
+            except:
+                pass
             if not tg_cli:
+                logger.info(f'[{message.from_user.id}] [NOT CLIENT] [AUTOANSWERING...]')
                 text = account.auto_answering_text_ref.text
                 if not text:
                     text = GeneralSettings.objects.get(pk=1).general_auto_answering

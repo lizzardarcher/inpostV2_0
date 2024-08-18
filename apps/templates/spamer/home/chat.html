@@ -14,7 +14,6 @@
             </li>
             <li class="nav-item">
                 <a disabled class="nav-link bg-success text-dark" href="#"><b>Загрузить Excel</b></a>
-{#                <a disabled class="nav-link bg-success text-dark" href="upload_excel"><b>Загрузить Excel</b></a>#}
             </li>
         </ul>
 
@@ -22,11 +21,10 @@
             <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Добавлен</th>
+                <th scope="col">Ссылка</th>
                 <th scope="col">Название</th>
                 <th scope="col">Подписчиков</th>
                 <th scope="col">Задержка</th>
-                {#                <th scope="col">В БАНе</th>#}
                 <th scope="col">Emoji</th>
                 <th scope="col">Удаление сообщений</th>
                 <th scope="col">Активен</th>
@@ -37,7 +35,7 @@
             {% for c in chats %}
                 <tr>
                     <td><a href="{{ c.id }}"><span class="badge badge-info"><i class="fa fa-bars"></i></span></a></td>
-                    <td>{{ c.datetime }}</td>
+                    <td><a href="{{ c.link }}" target="_blank">{{ c.link }}</a></td>
                     <td>{{ c.title }}</td>
                     <td>{{ c.subscribers }}</td>
                     <td>{{ c.delay }}</td>
@@ -47,7 +45,7 @@
                     <td>{% if c.is_active %}✅{% else %}❌{% endif %}</td>
                     <td>{{ c.comment }}</td>
                     <td><a class="btn btn-warning" href="{{ c.id }}/update/"><i class="fa fa-edit"></i></a></td>
-{#                    <td><a href="{{ c.id }}/delete/"><i class="fa fa-trash"></i></a></td>#}
+
                     <!-- Button trigger modal -->
                     <td><button type="button" class="btn btn-danger" data-toggle="modal" data-target="#Modal{{ c.id }}">
                         <i class="fa fa-trash"></i></a>

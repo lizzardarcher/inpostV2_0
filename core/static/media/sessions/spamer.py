@@ -11,6 +11,7 @@ from pathlib import Path
 from time import sleep
 
 import pyrogram
+from django.conf import settings
 from pyrogram import Client
 
 from django.core.files import File
@@ -26,7 +27,7 @@ from apps.spamer.models import Account, AccountLogging, Message, Chat
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format='%(asctime)s %(levelname) -8s %(message)s',
-    level=logging.INFO,
+    level=settings.LOG_LEVEL,
     datefmt='%Y.%m.%d %I:%M:%S',
     handlers=[
         logging.StreamHandler(stream=sys.stderr)
@@ -59,24 +60,6 @@ def random_string(letter_count, digit_count):
     random.shuffle(sam_list)  # It uses a random.shuffle() function to shuffle the string.
     final_string = ''.join(sam_list)
     return f'\n||ID: {final_string}||'
-
-
-async def check_if_joined(client, chat_id):
-    """Checks if the client is already a member of the specified chat.
-
-    Args:
-        client: The Pyrogram client instance.
-        chat_id: The chat ID (integer or string) to check.
-
-    Returns:
-        True if the client is a member, False otherwise.
-    """
-    try:
-        await client.get_chat_member(chat_id=chat_id, user_id=client.me.id)
-        return True  # Member found
-    except Exception as e:
-        print(f"Error checking membership: {e}")
-        return False
 
 
 async def post_to_chats(acc_id):

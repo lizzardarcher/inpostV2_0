@@ -16,8 +16,13 @@ SECRET_KEY = 'S#perS3crEt_1122'
 # DEBUG = config('DEBUG', default=True, cast=bool)
 DEBUG = True
 
-# load production server from .env
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1', config('SERVER', default='127.0.0.1')]
+LL = {'CRITICAL': 50,
+      'ERROR': 40,
+      'WARNING': 30,
+      'INFO': 20,
+      'NOTSET': 0}
+
+LOG_LEVEL = LL['INFO']
 
 ALLOWED_HOSTS = ["www.inpost.su", "inpost.su", "85.209.9.148"]  # inpost.su, 85.209.9.148
 

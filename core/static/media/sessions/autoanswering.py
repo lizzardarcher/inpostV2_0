@@ -37,12 +37,17 @@ async def main():
     """ Автоответчик """
 
     """ Пул сессий """
-    apps = [Client(x.session.name.split('/')[-1].split('.')[0]) for x in Account.objects.filter(status=True).order_by('first_name')]
+    apps = [Client(x.session.name.split('/')[-1].split('.')[0]) for x in Account.objects.filter(
+        status=True, is_auto_answering_active=True).order_by('first_name')]
 
     for app in apps:
-        logger.info(f'[{app.name}] [started]')
+
+        @app.on_message()
+        async def random_shit_handler(client, message):
+            logger.info(f'{message.text}')
+
         @app.on_message(filters.text & filters.private)
-        async def answer_(client, message):
+        async def auto_answering_handler(client, message):
             account = Account.objects.filter(session=f'sessions/{client.name}.session').last()
             tg_cli = Tg_client.objects.filter(user_id=message.from_user.id, account=account)
             logger.info(f'[{message.text}] [{account}]')
@@ -64,6 +69,7 @@ async def main():
                 last_name = message.from_user.last_name
                 Tg_client.objects.create(user_id=user_id, username=username, first_name=first_name, last_name=last_name,
                                          account=account)
+        logger.info(f'[{Account.objects.filter(session_for_chat=f"{app.name}_for_chat.session").last()}] [{app.name}] [started]')
 
     """ Активируем клиенты pyrogram с помощью compose() """
     await compose(apps, False)

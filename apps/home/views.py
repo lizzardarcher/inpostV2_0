@@ -83,6 +83,8 @@ class AdminPageUserDetailsView(SuccessMessageMixin, LoginRequiredMixin, Template
             'bots': Bot.objects.all(),
             'posts': Post.objects.all(),
             'chats': Chat.objects.all(),
+            'cal': PostCalendarAdmin().formatmonth(theyear=int(datetime.now().year),
+                                                   themonth=int(datetime.now().month))
         })
         return context
 

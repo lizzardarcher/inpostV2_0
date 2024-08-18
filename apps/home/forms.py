@@ -25,9 +25,9 @@ class PostForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'placeholder': 'Озаглавьте ваш пост, для более удобного управления'}),
             'text': forms.Textarea(attrs={'class': 'form-text', 'style': 'color:black;', 'cols': '60'}),
             'is_autosend': forms.CheckboxInput(),
-            'send_time_to_channels': forms.DateTimeInput(attrs={'class': 'form-control','type': 'datetime-local' }),
+            'send_time_to_channels': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'class': 'form-control','type': 'datetime-local' }),
             'delay': forms.NumberInput(attrs={'class': 'form-control'}),
-            'send_time_to_chats': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'send_time_to_chats': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'class': 'form-control', 'type': 'datetime-local'}),
             'delay_chat': forms.NumberInput(attrs={'class': 'form-control'}),
             'photo_1': forms.ClearableFileInput(attrs={'class': 'form-control'}),
             'photo_2': forms.ClearableFileInput(attrs={'class': 'form-control'}),
@@ -115,11 +115,12 @@ class PostScheduleForm(forms.ModelForm):
         model = PostSchedule
         fields = ['post', 'schedule', 'is_sent']
         widgets = {
-            'post': forms.Select(),
+            'post': forms.Select(attrs={'class': 'form-control text-info bg-dark '}),
             # 'post': forms.ModelChoiceField(attrs={'class': 'form-control text-info'}),
-            'schedule': forms.DateTimeInput(attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
+            'schedule': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
             'is_sent': forms.HiddenInput(attrs={'value': ''}),
         }
+
 
     def __init__(self, *args, **kwargs):
         super(PostScheduleForm, self).__init__(*args, **kwargs)
@@ -135,7 +136,7 @@ class PostScheduleMultipleForm(forms.ModelForm):
             # 'post': forms.ChoiceField(),
             'post': forms.SelectMultiple(),
             # 'post': forms.SelectMultiple(attrs={'class': 'form-control-sm form-control js-multiple-select', 'multiple': 'multiple'}),
-            'schedule': forms.DateTimeInput(attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
+            'schedule': forms.DateTimeInput(format='%Y-%m-%dT%H:%M', attrs={'class': 'form-control text-info', 'type': 'datetime-local'}),
             'is_sent': forms.HiddenInput(attrs={'value': ''}),
         }
 

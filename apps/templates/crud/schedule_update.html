@@ -1,17 +1,15 @@
 {% extends 'layouts/base.html' %}
-{% load crispy_forms_tags %}
 {% block content %}
     <body class="bg-light bg-gradient">
     <a id="back-btn" href="#" class="text-black"><h3>Назад</h3></a>
     <div class="container">
         <form method="post" enctype='multipart/form-data'>
             {% csrf_token %}
-            <div class="form-group form-control">
-                {{ form.post|as_crispy_field }}
-            </div>
-            <div class="form-group form-control ">
-                {{ form.schedule|as_crispy_field }}
-            </div>
+                {{ form.post }}
+                <br>
+                {{ form.schedule }}
+                <br>
+            
             <button type="submit" class="btn btn-primary w-50">Обновить</button>
         </form>
         <a id="delete" href="">

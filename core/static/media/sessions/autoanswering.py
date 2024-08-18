@@ -1,5 +1,6 @@
 import asyncio
 import random
+import sqlite3
 import string
 import sys
 from time import sleep
@@ -42,9 +43,9 @@ async def main():
 
     for app in apps:
 
-        @app.on_message()
-        async def random_shit_handler(client, message):
-            logger.info(f'{message.text}')
+        # @app.on_message()
+        # async def random_shit_handler(client, message):
+        #     logger.info(f'{message.text}')
 
         @app.on_message(filters.text & filters.private)
         async def auto_answering_handler(client, message):
@@ -60,7 +61,7 @@ async def main():
                 text = account.auto_answering_text_ref.text
                 if not text:
                     text = GeneralSettings.objects.get(pk=1).general_auto_answering
-                await asyncio.sleep(0.1)
+                await asyncio.sleep(8.1)
                 await client.send_message(message.chat.id, text)
                 user_id = message.from_user.id
                 username = message.from_user.username
@@ -75,4 +76,9 @@ async def main():
     await compose(apps, False)
 
 if __name__ == '__main__':
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except sqlite3.OperationalError as e:
+        print(e)
+    except KeyboardInterrupt:
+        sys.exit(0)

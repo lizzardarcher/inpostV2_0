@@ -81,7 +81,8 @@ async def post_to_chats(acc_id):
         logger.info(f'[List Chats] [{chats}]')
 
         acc_id = acc.id_account
-        session_name = acc.session_for_chat.split('/')[-1].split('.')[0]
+        # session_name = acc.session_for_chat.split('/')[-1].split('.')[0]
+        session_name = acc.session.name.split('/')[-1].split('.')[0]
         user = acc.user
         logger.info(f'[Account ID] [{acc_id}] [Session name] [{session_name}] [USER] [{user}]')
 
@@ -138,7 +139,7 @@ async def post_to_chats(acc_id):
                         res = await client.send_message(chat_id=chat_username, text=text, parse_mode=ParseMode.MARKDOWN)
                         logger.info(f'[Send message] [{acc}] [{chat_username}] [SUCCESS]')
                         jsn = json.loads(str(res))
-                        await asyncio.sleep(random.randint(a=3, b=8))
+                        await asyncio.sleep(random.randint(a=8, b=15))
 
                         # Записываем сообщение в базу
                         account_obj = Account.objects.filter(id_account=jsn['from_user']['id'])[0]

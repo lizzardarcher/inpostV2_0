@@ -170,7 +170,7 @@ class AccountUploadView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         return context
 
     def form_valid(self, form):
-        GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
+        # GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
         form.instance.user = self.request.user
         return super().form_valid(form)
 

@@ -30,14 +30,22 @@ async def main():
     """ Автоответчик """
 
     """ Пул сессий """
-    apps = [Client(x.session.name.split('/')[-1].split('.')[0]) for x in Account.objects.filter(
-        status=True, is_auto_answering_active=True).order_by('first_name')]
 
+    # apps = [Client(x.session_aa.name.split('/')[-1].split('.')[0]) for x in Account.objects.filter(
+    #     status=True, is_auto_answering_active=True, session_aa__isnull=False).order_by('first_name')]
+
+    apps = []
+    accounts = Account.objects.filter(status=True, is_auto_answering_active=True).order_by('first_name')
+    for account in accounts:
+        if account.session_aa:
+            apps.append(Client(account.session_aa.name.split('/')[-1].split('.')[0]))
+
+    logger.info(apps)
     for app in apps:
 
         @app.on_message(filters.text & filters.private)
         async def auto_answering_handler(client, message):
-            account = Account.objects.filter(session=f'sessions/{client.name}.session').last()
+            account = Account.objects.filter(session_aa=f'sessions/{client.name}.session').last()
             tg_cli = Tg_client.objects.filter(user_id=message.from_user.id, account=account).last()
             logger.info(f'[{message.text}] [{account}] [{tg_cli}] [NOT AUTOANSWERING]')
 
@@ -64,7 +72,7 @@ async def main():
                 last_name = message.from_user.last_name
                 Tg_client.objects.create(user_id=user_id, username=username, first_name=first_name, last_name=last_name,
                                          account=account)
-        logger.info(f'[{Account.objects.filter(session_for_chat=f"{app.name}_for_chat.session").last()}] [{app.name}] [started]')
+        logger.info(f'[{Account.objects.filter(session_aa=f"sessions/{app.name}.session").last()}] [{app.name}] [started]')
 
     """ Активируем клиенты pyrogram с помощью compose() """
     await compose(apps, False)

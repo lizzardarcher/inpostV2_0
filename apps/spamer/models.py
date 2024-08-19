@@ -60,7 +60,9 @@ class Account(models.Model):
     is_activated = models.BooleanField(default=False, null=True, blank=True, verbose_name='Активирован')
     is_change_needed = models.BooleanField(default=False, null=True, blank=True, verbose_name='Обновление BIO')
     report = models.TextField(max_length=1000000, null=True, blank=True, verbose_name='Отчёт о состоянии')
-    session = models.FileField(upload_to='sessions', max_length=1000, null=True, blank=False, verbose_name='Сессия',
+    session = models.FileField(upload_to='sessions', max_length=1000, null=True, blank=False, verbose_name='Сессия для рассылки',
+                               validators=[validators.FileExtensionValidator(['session'])])
+    session_aa = models.FileField(upload_to='sessions', max_length=1000, null=True, blank=False, verbose_name='Сессия для автоответчика',
                                validators=[validators.FileExtensionValidator(['session'])])
     session_for_chat = models.CharField(max_length=1000, null=True, blank=True, verbose_name='Сессия для чатов')
     session_for_lk = models.CharField(max_length=1000, null=True, blank=True, verbose_name='Сессия для лс')

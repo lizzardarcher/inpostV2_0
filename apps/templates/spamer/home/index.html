@@ -121,7 +121,7 @@
                     <tbody>
                     {% for a in len_for_acc %}
                         <tr>
-                            <td>{{ a.name }}</td>
+                            <td><a href="/spm/accs/{{ a.name.id_account }}">{{ a.name }}</a></td>
                             <td><code>{{ a.count_total }}</code></td>
                             <td><code>{{ a.count_day }}</code></td>
                         </tr>

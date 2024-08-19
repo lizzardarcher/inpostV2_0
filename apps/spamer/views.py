@@ -23,7 +23,6 @@ from apps.home.utils import get_chat_info
 class BaseSpamerView(LoginRequiredMixin, TemplateView):
     template_name = "spamer/home/index.html"
 
-
     def get_context_data(self, **kwargs):
         acc_ids = [x.id_account for x in Account.objects.all()]
         # today_start = timezone.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -45,7 +44,8 @@ class BaseSpamerView(LoginRequiredMixin, TemplateView):
                                                                     datetime__lte=today_end).count(),
                         'len_for_acc':
                             [{'name': Account.objects.filter(id_account=x).last(),
-                              'count_total': Message.objects.filter(account=Account.objects.filter(id_account=x).last()).count(),
+                              'count_total': Message.objects.filter(
+                                  account=Account.objects.filter(id_account=x).last()).count(),
                               'count_day': Message.objects.filter(account=Account.objects.filter(id_account=x).last(),
                                                                   datetime__gte=today_start,
                                                                   datetime__lte=today_end).count()
@@ -85,7 +85,10 @@ class AccountDetailView(LoginRequiredMixin, DetailView):
         context.update({'segment': 'spm',
                         'spm_segment': 'account',
                         'message_count': Message.objects.filter(account=Account.objects.filter(
-                            id_account=int(self.request.path.split('/')[-2])).last()).count()
+                            id_account=int(self.request.path.split('/')[-2])).last()).count(),
+                        'logs': AccountLogging.objects.filter(
+                            account=Account.objects.filter(
+                                id_account=int(self.request.path.split('/')[-2])).last()).order_by('-datetime')[:100]
                         })
         return context
 

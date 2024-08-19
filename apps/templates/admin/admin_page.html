@@ -20,52 +20,52 @@
         </div>
     {% endif %}
 
-    <button type="button" class="btn btn-info" data-toggle="modal"
-            data-target="#Modal">
-        Календарь
-    </button>
-    <div class="modal fade" id="Modal" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content bg-dark">
-                <div class="modal-header">
-                    <h3 class="modal-title text-light" id="exampleModalLabel">Расписание по всем пользователям</h3>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                        <i class="tim-icons icon-simple-remove"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="cal_mini" class="rounded">
-                        <br/>
-                        <div class="col-12" style="display: block">{{ cal_mini|safe }}</div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+{#    <button type="button" class="btn btn-info" data-toggle="modal"#}
+{#            data-target="#Modal">#}
+{#        Календарь#}
+{#    </button>#}
+{#    <div class="modal fade" id="Modal" tabindex="-1" role="dialog"#}
+{#         aria-labelledby="exampleModalLabel" aria-hidden="true">#}
+{#        <div class="modal-dialog" role="document">#}
+{#            <div class="modal-content bg-dark">#}
+{#                <div class="modal-header">#}
+{#                    <h3 class="modal-title text-light" id="exampleModalLabel">Расписание по всем пользователям</h3>#}
+{#                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">#}
+{#                        <i class="tim-icons icon-simple-remove"></i>#}
+{#                    </button>#}
+{#                </div>#}
+{#                <div class="modal-body">#}
+{#                    <div id="cal_mini" class="rounded">#}
+{#                        <br/>#}
+{#                        <div class="col-12" style="display: block">{{ cal_mini|safe }}</div>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="modal-footer">#}
+{#                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть#}
+{#                    </button>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    </div>#}
 
 
 
-    <p>
-        <a class="btn btn-secondary" data-toggle="collapse" href="#collapseAutopost"
-           role="button"
-           aria-expanded="false" aria-controls="collapseReference">Расписание
-        </a>
-    </p>
-    <div class="collapse" id="collapseAutopost">
-
-
-        <div id="cal" class="rounded">
-            <br/>
-            <div class="col-12" style="display: block">{{ cal|safe }}</div>
-        </div>
-
-
-    </div>
+{#    <p>#}
+{#        <a class="btn btn-secondary" data-toggle="collapse" href="#collapseAutopost"#}
+{#           role="button"#}
+{#           aria-expanded="false" aria-controls="collapseReference">Расписание#}
+{#        </a>#}
+{#    </p>#}
+{#    <div class="collapse" id="collapseAutopost">#}
+{##}
+{##}
+{#        <div id="cal" class="rounded">#}
+{#            <br/>#}
+{#            <div class="col-12" style="display: block">{{ cal|safe }}</div>#}
+{#        </div>#}
+{##}
+{##}
+{#    </div>#}
 
 
 

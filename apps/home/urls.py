@@ -82,7 +82,7 @@ urlpatterns = [
 
     path('schedule_update/<int:pk>', views.ScheduleUpdateView.as_view(), name='update schedule'),
     path('schedule_update_admin/<int:pk>', views.ScheduleUpdateAdminView.as_view(), name='update admin schedule'),
-    path('schedule_update_admin_user/<int:pk>', views.ScheduleUpdateAdminView.as_view(), name='update admin user schedule'),
+    path('schedule_update_admin_user/<int:pk>', views.CalendarAdminUserEventCreate.as_view(), name='update admin user schedule'),
     path('schedule_delete/<int:pk>', views.ScheduleDeleteView.as_view(), name='delete schedule'),
 
 ]

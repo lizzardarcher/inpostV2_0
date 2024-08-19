@@ -155,11 +155,16 @@ class PostScheduleAdminUserForm(forms.ModelForm):
             'is_sent': forms.HiddenInput(attrs={'value': ''}),
         }
 
-    # def __init__(self,user, *args, **kwargs):
-    #     super(PostScheduleAdminUserForm, self).__init__(user, *args, **kwargs)
-    #     self.user = user
-    #     post_set = Post.objects.filter(user=User.objects.filter(username=self.user).last())
-    #     self.fields['post'].queryset = post_set
+    # def __init__(self, *args, **kwargs):
+    #     super(PostScheduleAdminUserForm, self).__init__(*args, **kwargs)
+    #     self._queryset = kwargs.get('queryset', None)
+    #     self.fields['post'].queryset = kwargs['queryset']
+
+    def __init__(self, *args, **kwargs):
+        super(PostScheduleAdminUserForm, self).__init__( *args, **kwargs)
+        self.username = kwargs['initial']['post']
+        post_set = Post.objects.filter(user=User.objects.filter(username=self.username).last())
+        self.fields['post'].queryset = post_set
 
 
 class PostScheduleMultipleForm(forms.ModelForm):

@@ -10,13 +10,15 @@ from django.template import loader
 from django import forms
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import (ListView, DeleteView, UpdateView, CreateView, TemplateView, DetailView, View)
+from django.views.generic import (ListView, DeleteView, UpdateView, CreateView, TemplateView, DetailView, View,
+                                  FormView)
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.forms import modelformset_factory
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.views.generic.edit import FormMixin
 
 from .models import *
 from .forms import *
@@ -84,8 +86,9 @@ class AdminPageUserDetailsView(SuccessMessageMixin, LoginRequiredMixin, Template
             'bots': Bot.objects.all(),
             'posts': Post.objects.all(),
             'chats': Chat.objects.all(),
-            'cal_user': PostCalendarAdminDetail(user=int(self.request.path.split('/')[-1])).formatmonth(theyear=int(datetime.now().year),
-                                                   themonth=int(datetime.now().month))
+            'cal_user': PostCalendarAdminDetail(user=int(self.request.path.split('/')[-1])).formatmonth(
+                theyear=int(datetime.now().year),
+                themonth=int(datetime.now().month))
         })
         return context
 
@@ -249,6 +252,7 @@ class CalendarAdminEventCreate(SuccessMessageMixin, LoginRequiredMixin, CreateVi
         # form.instance.user = self.request.user
         return super().form_valid(form)
 
+
 class CalendarAdminUserEventCreate(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     model = PostSchedule
     form_class = PostScheduleAdminUserForm
@@ -258,16 +262,31 @@ class CalendarAdminUserEventCreate(SuccessMessageMixin, LoginRequiredMixin, Crea
     def get_success_url(self):
         return f'/admin_page/user_details/{self.object.user.id}'
 
-    def get_context_data(self, **kwargs):
-        context = super(CalendarAdminUserEventCreate, self).get_context_data(**kwargs)
-        # context['name'] = self.request.GET.get('name')
-        # context['sch'] = PostSchedule.objects.filter(user=self.request.user)
-        return context
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super(CalendarAdminUserEventCreate, self).get_form_kwargs()
+        kwargs['initial']['post'] = self.request.GET['username']
+        return kwargs
+
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     initial_data = {
+    #         'post': Post.objects.filter(user=User.objects.filter(username=self.request.GET['username']).last()),
+    #         }
+    #     context['form'] = self.form_class(initial=initial_data)
+    #     return context
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
-        form.instance.user = User.objects.get(id=self.request.user.id)
+        form.instance.user = User.objects.filter(username=self.request.GET['username']).last()
         return super().form_valid(form)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        # post = self.kwargs['post']
+        # initial['po111st'] = Post.objects.filter(user=User.objects.filter(username=self.request.GET['username']).last())
+        post_set = Post.objects.filter(user=User.objects.filter(username='administrator').last())
+        initial['post'] = post_set
+        return initial
 
 
 # USER ##############################################

@@ -83,7 +83,8 @@ class PostCalendarAdmin(HTMLCalendar, ListView):
         sch = PostSchedule.objects.all()
         for i in sch:
             if i.schedule.year == num_year and i.schedule.month == num_month and i.schedule.day == num_day:
-                s.append((i.post.name, i.schedule.strftime('%H:%M'), i.id, i.schedule.strftime('%Y-%m-%d %H:%M'), i.post.user.username))
+                s.append((i.post.name, i.schedule.strftime('%H:%M'), i.id, i.schedule.strftime('%Y-%m-%d %H:%M'),
+                          i.post.user.username))
         schedule_data = ''
         for data in sorted(s):
             if data[3] >= datetime.now().strftime('%Y-%m-%d %H:%M'):
@@ -125,6 +126,7 @@ class PostCalendarAdmin(HTMLCalendar, ListView):
         a('\n')
         return ''.join(v)
 
+
 class PostCalendarAdminDetail(HTMLCalendar, ListView):
     cssclasses = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"]
 
@@ -145,18 +147,19 @@ class PostCalendarAdminDetail(HTMLCalendar, ListView):
         username = User.objects.get(id=self.user).username
         for i in sch:
             if i.schedule.year == num_year and i.schedule.month == num_month and i.schedule.day == num_day:
-                s.append((i.post.name, i.schedule.strftime('%H:%M'), i.id, i.schedule.strftime('%Y-%m-%d %H:%M'), i.post.user.username))
+                s.append((i.post.name, i.schedule.strftime('%H:%M'), i.id, i.schedule.strftime('%Y-%m-%d %H:%M'),
+                          i.post.user.username))
         schedule_data = ''
         for data in sorted(s):
             if data[3] >= datetime.now().strftime('%Y-%m-%d %H:%M'):
-                schedule_data += f'<a href="/schedule_update_admin_user/{data[2]}"><p class="badge badge-warning text-dark">[{data[-1]}] [{data[0]}]  [{data[1]}]</p></a><br/>'
+                schedule_data += f'<a href="/schedule_update_admin_user/{data[2]}?username={username}"><p class="badge badge-warning text-dark">[{data[-1]}] [{data[0]}]  [{data[1]}]</p></a><br/>'
             else:
-                schedule_data += f'<a href="/schedule_update_admin_user/{data[2]}"><p class="badge badge-info text-dark">[{data[-1]}] [{data[0]}]  [{data[1]}]</p></a><br/>'
+                schedule_data += f'<a href="/schedule_update_admin_user/{data[2]}?username={username}"><p class="badge badge-info text-dark">[{data[-1]}] [{data[0]}]  [{data[1]}]</p></a><br/>'
         if date_row.month != self.month:
             return '<td class="noday">&nbsp;</td>'  # day outside month
         else:
-            return f'<td class="{week_day}"><a href="/calendar_event_create_admin_user/{num_year}/{num_month}/{num_day}?username={username}"><div style="height:100%;width:100%"  >{num_day}</div></a><br/> ' \
-                   f'{schedule_data}</td>'
+            return (f'<td class="{week_day}"><a href="/calendar_event_create_admin_user/{num_year}/{num_month}/{num_day}'
+                    f'?username={username}"><div style="height:100%;width:100%">{num_day}</div></a><br/>{schedule_data}</td>')
 
     def formatweek(self, theweek):
         """

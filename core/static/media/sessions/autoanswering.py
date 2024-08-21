@@ -63,7 +63,7 @@ async def main():
                 text = account.auto_answering_text_ref.text
                 if not text:
                     text = GeneralSettings.objects.get(pk=1).general_auto_answering
-                await asyncio.sleep(8.1)
+                await asyncio.sleep(4.1)
                 await client.send_message(message.chat.id, text)
                 user_id = message.from_user.id
                 username = message.from_user.username

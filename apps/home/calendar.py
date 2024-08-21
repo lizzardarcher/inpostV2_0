@@ -152,9 +152,9 @@ class PostCalendarAdminDetail(HTMLCalendar, ListView):
         schedule_data = ''
         for data in sorted(s):
             if data[3] >= datetime.now().strftime('%Y-%m-%d %H:%M'):
-                schedule_data += f'<a href="/schedule_update_admin_user/{data[2]}?username={username}"><p class="badge badge-warning text-dark">[{data[-1]}] [{data[0]}]  [{data[1]}]</p></a><br/>'
+                schedule_data += f'<a href="/schedule_update_admin_user/{data[2]}?username={username}"><p class="badge badge-warning text-dark" style="font-size: 10px;">[{data[-1]}] [{data[0]}]  [{data[1]}]</p></a><br/>'
             else:
-                schedule_data += f'<a href="/schedule_update_admin_user/{data[2]}?username={username}"><p class="badge badge-info text-dark">[{data[-1]}] [{data[0]}]  [{data[1]}]</p></a><br/>'
+                schedule_data += f'<a href="/schedule_update_admin_user/{data[2]}?username={username}"><p class="badge badge-info text-dark" style="font-size: 10px;">[{data[-1]}] [{data[0]}]  [{data[1]}]</p></a><br/>'
         if date_row.month != self.month:
             return '<td class="noday">&nbsp;</td>'  # day outside month
         else:

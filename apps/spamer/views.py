@@ -539,3 +539,5 @@ class CommonTextTemplateDeleteView(LoginRequiredMixin, DeleteView):
         obj.delete()
         messages.warning(request, message='Шаблон текста рассылки удалён!')
         return HttpResponseRedirect("/spm/common_text/")
+
+

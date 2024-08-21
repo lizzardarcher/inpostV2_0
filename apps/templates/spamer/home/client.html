@@ -2,6 +2,38 @@
 {% block title %} Аккаунты для рассылки {% endblock %}
 
 {% block content %}
+    <div class="p-2 m-1">
+        <h1> Клиенты</h1>
+    
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Дата</th>
+                <th scope="col">Usename</th>
+                <th scope="col">Имя</th>
+                <th scope="col">Фамилия</th>
+                <th scope="col">Тел</th>
+                <th scope="col">Ответил</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in client %}
+                <tr>
+                    <td>{{ c.user_id }}</td>
+                    <td>{{ c.datetime }}</td>
+                    <td>{% if c.username %}{{ c.username }}{% else %}-{% endif %}</td>
+                    <td>{% if c.first_name %}{{ c.first_name }}{% else %}-{% endif %}</td>
+                    <td>{% if c.last_name %}{{ c.last_name }}{% else %}-{% endif %}</td>
+                    <td>{% if c.phone %}{{ c.phone }}{% else %}-{% endif %}</td>
+                    <td>{{ c.account }}</td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
 
 {% endblock content %}
 

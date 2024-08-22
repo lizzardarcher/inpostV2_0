@@ -70,16 +70,25 @@ while True:
                             except:
                                 photo_file = None
 
-                            first_name = user.first_name
-                            last_name = user.last_name
                             user_id = user.id
-                            username = user.username
+                            try:
+                                first_name = user.first_name
+                            except AttributeError:
+                                first_name = None
+                            try:
+                                last_name = user.last_name
+                            except AttributeError:
+                                last_name = None
+                            try:
+                                username = user.username
+                            except AttributeError:
+                                username = None
                             try:
                                 bio = user.bio
                             except AttributeError:
                                 bio = None
                         acc.update(is_activated=True, first_name=first_name, last_name=last_name, username=username,
-                                   id_account=user_id, photo=photo_file, is_auto_answering_active=True, bio=bio)
+                                   id_account=user_id, photo=photo_file, is_auto_answering_active=False, bio=bio)
                         acc.update(is_change_needed=False)
 
                         break

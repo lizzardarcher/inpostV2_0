@@ -67,9 +67,9 @@ class Account(models.Model):
     session_for_chat = models.CharField(max_length=1000, null=True, blank=True, verbose_name='Сессия для чатов')
     session_for_lk = models.CharField(max_length=1000, null=True, blank=True, verbose_name='Сессия для лс')
 
-    common_text = models.TextField(max_length=4000, null=True, blank=True, verbose_name='Текст Рассылки')
+    common_text = models.TextField(max_length=4000, null=True, blank=False, verbose_name='Текст Рассылки')
     media = models.FileField(null=True, blank=True, verbose_name='Image')
-    auto_answering_text = models.TextField(max_length=4000, null=True, blank=True, verbose_name='Текст автоответчика')
+    auto_answering_text = models.TextField(max_length=4000, null=True, blank=False, verbose_name='Текст автоответчика')
 
     common_text_ref = models.ForeignKey(to='CommonTextTemplate', on_delete=models.CASCADE, related_name='commref',
                                         default=None, null=True,

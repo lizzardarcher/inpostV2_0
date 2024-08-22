@@ -210,11 +210,13 @@ async def post_to_chats(acc_id):
                 AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                               message='401 USER_DEACTIVATED_BAN',
                                               datetime=datetime.datetime.now(), chat=None)
+                break
             elif '401 AUTH_KEY_UNREGISTERED' in traceback.format_exc():
                 Account.objects.filter(id_account=acc_id).update(status=False, is_change_needed=False)
                 AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                               message='401 AUTH_KEY_UNREGISTERED',
                                               datetime=datetime.datetime.now(), chat=None)
+                break
 
 
 if __name__ == '__main__':

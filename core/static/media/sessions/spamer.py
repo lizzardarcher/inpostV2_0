@@ -7,18 +7,12 @@ import string
 import random
 import sys
 import traceback
-from pathlib import Path
-from time import sleep
 
-import pyrogram
-from django.conf import settings
 from pyrogram import Client
-
-from django.core.files import File
-import django
 from pyrogram.enums import ParseMode
 from pyrogram.types import Chat as _chat
 
+import django
 os.environ['DJANGO_SETTINGS_MODULE'] = 'core.settings'
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 django.setup()

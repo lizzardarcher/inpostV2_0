@@ -41,6 +41,9 @@ async def main():
             apps.append(Client(account.session_aa.name.split('/')[-1].split('.')[0]))
 
     logger.info(apps)
+    if not apps:
+        sys.exit(1)
+
     for app in apps:
 
         @app.on_message(filters.text & filters.private)

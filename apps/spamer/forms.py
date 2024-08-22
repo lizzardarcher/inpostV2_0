@@ -33,6 +33,7 @@ class AccountForm(forms.ModelForm):
             'is_spam_active',
             # 'is_spam_lk_active',
             'delay',
+            'delay_2',
             # 'master_to_forward',
             # 'account_enabled'
         ]
@@ -60,6 +61,8 @@ class AccountForm(forms.ModelForm):
             'is_spam_active': forms.CheckboxInput(attrs={'class': 'form-control'}),
             # 'is_spam_lk_active': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'delay': forms.TextInput(attrs={'class': 'form-control'}),
+            'delay_2': forms.NumberInput(attrs={'class': 'form-control'}),
+
             # 'master_to_forward': forms.CheckboxInput(attrs={'class': 'form-control'}),
             # 'account_enabled': forms.CheckboxInput(attrs={'class': 'form-control'}),
         }
@@ -91,7 +94,7 @@ class AccountSMSHandlerForm(forms.ModelForm):
 class ChatForm(forms.ModelForm):
     class Meta:
         model = Chat
-        fields = ['text', 'delay', 'is_emoji_allowed',
+        fields = ['text', 'delay','is_emoji_allowed',
                   'is_del_mes_available', 'comment']
         widgets = {
             'text': forms.Textarea(attrs={'class': 'form-control'}),

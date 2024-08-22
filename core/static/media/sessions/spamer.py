@@ -141,7 +141,6 @@ async def post_to_chats(acc_id):
                             res = await client.send_message(chat_id=chat_username, text=text, parse_mode=ParseMode.MARKDOWN)
                             logger.info(f'[Send message] [{acc}] [{chat_username}] [SUCCESS]')
                             jsn = json.loads(str(res))
-                            await asyncio.sleep(random.randint(a=3, b=7))
 
                             # Записываем сообщение в базу
                             account_obj = Account.objects.filter(id_account=jsn['from_user']['id'])[0]
@@ -151,6 +150,8 @@ async def post_to_chats(acc_id):
                             AccountLogging.objects.create(log_level='Info', account=acc, user=user,
                                                           message='MESSAGE SENT',
                                                           datetime=datetime.datetime.now(), chat=chat)
+                            await asyncio.sleep(acc.delay_2)
+
                         except Exception as e:
                             print(e)
                             if '401 USER_DEACTIVATED_BAN' in traceback.format_exc():

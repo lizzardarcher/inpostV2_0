@@ -26,7 +26,8 @@
                     <p class="card-text"><code>{{ account.auto_answering_text_ref.text }}</code></p>
                 </div>
                 <div class="col-md-4 col-sm-12">
-                    <p class="card-text">Задержка: <code>{{ account.delay }}</code> (мин.)</p>
+                    <p class="card-text">Задержка после цикла по чатам: <code>{{ account.delay }}</code> (мин.)</p>
+                    <p class="card-text">Задержка между каждой отправкой: <code>{{ account.delay_2 }}</code> (сек.)</p>
                     <p><a href="/spm/accs/{{ account.id_account }}/update/">Редактировать <i class="fa fa-edit"></i></a>
                     </p>
                     <p><a href="/spm/accs/{{ account.id_account }}/delete/">Удалить <i class="fa fa-trash"></i></a></p>

@@ -35,7 +35,7 @@ def list_files_in_directory(directory_path):
 
 while True:
     file_list = list_files_in_directory(directory_to_list)
-    accounts = Account.objects.filter(is_activated=False) | Account.objects.filter(is_change_needed=True)
+    accounts = Account.objects.filter(status=True, is_activated=False) | Account.objects.filter(status=True, is_change_needed=True)
     print('Pending accounts:', accounts, len(accounts))
     for account in accounts:
         try:
@@ -52,8 +52,6 @@ while True:
                     if not account.is_activated:
 
                         session_for_chat = file.replace('.', '_for_chat.')
-                        os.system(f"cp {file} {session_for_chat}")
-                        acc.update(session_for_chat=session_for_chat)
 
                         client = Client(name=file.split('.')[0])
                         with client:
@@ -88,9 +86,8 @@ while True:
                             except AttributeError:
                                 bio = None
                         acc.update(is_activated=True, first_name=first_name, last_name=last_name, username=username,
-                                   id_account=user_id, photo=photo_file, is_auto_answering_active=False, bio=bio)
-                        acc.update(is_change_needed=False)
-
+                                   id_account=user_id, photo=photo_file, is_auto_answering_active=False, bio=bio,
+                                   is_change_needed=False)
                         break
 
                     elif account.is_change_needed:

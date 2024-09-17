@@ -11,8 +11,7 @@ from PyQt5.QtWidgets import (
 )
 
 from pyrogram import Client
-import pyrogram.errors
-
+import traceback
 
 class LoginWindow(QWidget):
     def __init__(self):
@@ -80,7 +79,7 @@ class LoginWindow(QWidget):
             # client.disconnect()
 
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to connect: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to connect: {traceback.format_exc()}")
             return
 
         self.code_window = CodeWindow(client=self.client, phone_number=phone_number,
@@ -119,7 +118,7 @@ class LoginWindow(QWidget):
             # client.disconnect()
 
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to connect: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to connect: {traceback.format_exc()}")
             return
 
         self.code_window = CodeWindow(client=self.client, phone_number=phone_number,
@@ -171,7 +170,7 @@ class CodeWindow(QWidget):
             QMessageBox.information(self, "Success", "Session created successfully!")
             self.close()
         except Exception as e:
-            QMessageBox.critical(self, "Error", f"Failed to verify: {e}")
+            QMessageBox.critical(self, "Error", f"Failed to verify: {traceback.format_exc()}")
         self.close()
 
 

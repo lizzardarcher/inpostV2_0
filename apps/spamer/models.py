@@ -82,9 +82,9 @@ class Account(models.Model):
                                                    verbose_name='Автоответчик вкл/выкл')
     is_spam_active = models.BooleanField(default=False, null=True, blank=True, verbose_name='Спам вкл/выкл')
     is_spam_lk_active = models.BooleanField(default=False, null=True, blank=True, verbose_name='Спам по ЛС вкл/выкл')
-    delay = models.IntegerField(default=5, null=True, blank=True,
+    delay = models.IntegerField(default=12, null=True, blank=True,
                                 verbose_name='Задержка после прохода по чатам (в минутах)')
-    delay_2 = models.IntegerField(default=5, null=True, blank=True,
+    delay_2 = models.IntegerField(default=20, null=True, blank=True,
                                 verbose_name='Задержка после отправки каждого сообщения (в секундах)')
     master_to_forward = models.CharField(max_length=100, null=True, blank=True,
                                          verbose_name='Кому пересылать сообщения')

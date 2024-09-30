@@ -26,6 +26,6 @@ from apps.spamer.models import GeneralSettings
 while True:
     if GeneralSettings.objects.filter(id=1)[0].is_reload_spam_needed:
         os.system('systemctl restart spamer.service')
-        # os.system('systemctl restart autoanswering.service')
+        os.system('systemctl restart autoanswering.service')
         GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=False)
     sleep(10)

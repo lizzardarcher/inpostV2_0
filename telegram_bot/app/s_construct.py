@@ -1,5 +1,5 @@
 import sys
-
+import random
 from PyQt5.QtWidgets import (
     QApplication,
     QWidget,
@@ -13,15 +13,91 @@ from PyQt5.QtWidgets import (
 from pyrogram import Client
 import traceback
 
+client_parameters = [
+    {
+        "device_model": "iPhone 12",
+        "app_version": "1.0.0",
+        "system_version": "iOS 14.4",
+        "lang_code": "ru"
+    },
+    {
+        "device_model": "Samsung Galaxy S21",
+        "app_version": "2.0.0",
+        "system_version": "Android 11",
+        "lang_code": "ru"
+    },
+    {
+        "device_model": "POCO X3 Pro",
+        "app_version": "1.1.0",
+        "system_version": "Android 12",
+        "lang_code": "ru"
+    },
+    {
+        "device_model": "MacBook Pro",
+        "app_version": "1.2.3",
+        "system_version": "macOS Big Sur",
+        "lang_code": "ru"
+    },
+    {
+        "device_model": "iPhone 11",
+        "app_version": "2.1.0",
+        "system_version": "iOS 14.3",
+        "lang_code": "ru"
+    },
+    {
+        "device_model": "OnePlus 9",
+        "app_version": "3.0.0",
+        "system_version": "Android 12",
+        "lang_code": "ru"
+    },
+    {
+        "device_model": "iPad Pro",
+        "app_version": "1.0.1",
+        "system_version": "iPadOS 14.5",
+        "lang_code": "ru"
+    },
+    {
+        "device_model": "Sony Xperia",
+        "app_version": "4.0.0",
+        "system_version": "Android 10",
+        "lang_code": "ru"
+    },
+    {
+        "device_model": "iPhone 7 Plus",
+        "app_version": "1.3.0",
+        "system_version": "iOS 11.1",
+        "lang_code": "ru"
+    },
+    {
+        "device_model": "HTC One",
+        "app_version": "5.0.0",
+        "system_version": "Android 9",
+        "lang_code": "ru"
+    },
+    {
+        "device_model": "Nexus 5",
+        "app_version": "1.4.1",
+        "system_version": "Android 10",
+        "lang_code": "ru"
+    }
+]
+
+
 class LoginWindow(QWidget):
     def __init__(self):
         super().__init__()
-
+        self.params = random.choice(client_parameters)
         self.client = None
         self.code_window = None
         self.phone_code_hash = None
         self.setWindowTitle("🚀 S Construct")
         self.resize(400, 300)
+
+        self.param_label_top = QLabel(f'Current Parameters:')
+        self.param_label_1 = QLabel(f'Device Model: {self.params["device_model"]}')
+        self.param_label_2 = QLabel(f'App Version: {self.params["app_version"]}')
+        self.param_label_3 = QLabel(f'System Version: {self.params["system_version"]}')
+        self.param_label_4 = QLabel(f'Lang Code: {self.params["lang_code"]}')
 
         self.api_id_label = QLabel("API ID:")
         self.api_id_input = QLineEdit()
@@ -39,6 +115,11 @@ class LoginWindow(QWidget):
         self.login_button_2.clicked.connect(self.login_2)
 
         layout = QVBoxLayout()
+        layout.addWidget(self.param_label_top)
+        layout.addWidget(self.param_label_1)
+        layout.addWidget(self.param_label_2)
+        layout.addWidget(self.param_label_3)
+        layout.addWidget(self.param_label_4)
         layout.addWidget(self.api_id_label)
         layout.addWidget(self.api_id_input)
         layout.addWidget(self.api_hash_label)
@@ -50,10 +131,10 @@ class LoginWindow(QWidget):
         self.setLayout(layout)
 
     def login_1(self):
-        api_id = self.api_id_input.text()
-        api_hash = self.api_hash_input.text()
+        api_id = self.api_id_input.text().strip()
+        api_hash = self.api_hash_input.text().strip()
         phone_number = (self.phone_number_input.text().replace(" ", "").replace("-", "")
-                                                        .replace(")", "").replace("(",""))
+                        .replace(")", "").replace("(", ""))
 
         if '+' not in phone_number:
             phone_number = '+' + phone_number
@@ -65,10 +146,10 @@ class LoginWindow(QWidget):
         try:
             self.client = Client(f"{str(api_id)}_chat",
                                  api_id=api_id, api_hash=api_hash, phone_number=phone_number,
-                                 device_model='iphone 12 pro',
-                                 app_version='15.3.0',
-                                 system_version="24.04",
-                                 lang_code="ru")
+                                 device_model=self.params['device_model'],
+                                 app_version=self.params['app_version'],
+                                 system_version=self.params['system_version'],
+                                 lang_code=self.params['lang_code'])
             self.client.connect()
 
             code = self.client.send_code(phone_number)
@@ -89,8 +170,8 @@ class LoginWindow(QWidget):
         # self.close()
 
     def login_2(self):
-        api_id = self.api_id_input.text()
-        api_hash = self.api_hash_input.text()
+        api_id = self.api_id_input.text().strip()
+        api_hash = self.api_hash_input.text().strip()
         phone_number = (self.phone_number_input.text().replace(" ", "").replace("-", "")
                         .replace(")", "").replace("(", ""))
 
@@ -104,10 +185,10 @@ class LoginWindow(QWidget):
         try:
             self.client = Client(f"{str(api_id)}_auto_answering",
                                  api_id=api_id, api_hash=api_hash, phone_number=phone_number,
-                                 device_model='iphone 12 pro',
-                                 app_version='15.3.0',
-                                 system_version="24.04",
-                                 lang_code="ru")
+                                 device_model=self.params['device_model'],
+                                 app_version=self.params['app_version'],
+                                 system_version=self.params['system_version'],
+                                 lang_code=self.params['lang_code'])
             self.client.connect()
 
             code = self.client.send_code(phone_number)

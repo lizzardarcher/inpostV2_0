@@ -229,12 +229,30 @@ class ChatForm(forms.ModelForm):
 
 
 class ChatAdminForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super(ChatAdminForm, self).__init__(*args, **kwargs)
+        bot_set = Bot.objects.all()
+        self.fields['bot'].queryset = bot_set
+
     class Meta:
         model = Chat
-        fields = ['bot', 'user', 'chat_type', 'ref']
+        fields = ['bot', 'chat_type', 'ref', 'user']
         widgets = {
+            'bot': forms.Select(attrs={'class': 'form-control text-info'}),
+            'user': forms.Select(attrs={'class': 'form-control text-info'}),
+            'chat_type': forms.Select(attrs={'class': 'form-control text-info'}),
             'ref': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'https://t.me/blablabla'}),
         }
+
+
+# class ChatAdminForm(forms.ModelForm):
+#     class Meta:
+#         model = Chat
+#         fields = ['bot', 'user', 'chat_type', 'ref']
+#         widgets = {
+#             'ref': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'https://t.me/blablabla'}),
+#         }
 
 
 class PostAdminForm(forms.ModelForm):

@@ -35,7 +35,7 @@ async def main():
     #     status=True, is_auto_answering_active=True, session_aa__isnull=False).order_by('first_name')]
 
     apps = []
-    accounts = Account.objects.filter(status=True, is_auto_answering_active=True).order_by('first_name')
+    accounts = Account.objects.filter(status=True, is_auto_answering_active=True)
     for account in accounts:
         if account.session_aa:
             apps.append(Client(account.session_aa.name.split('/')[-1].split('.')[0]))

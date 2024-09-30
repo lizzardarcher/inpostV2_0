@@ -1,24 +1,10 @@
-import os
 import traceback
 from time import sleep
-from datetime import datetime
 import json
 
-from bs4 import BeautifulSoup
 import requests
-from telebot import TeleBot
-from telebot.types import (InputMediaPhoto,
-                           InputMediaVideo,
-                           InputMediaAudio,
-                           InputMediaDocument,
-                           InlineKeyboardMarkup,
-                           InlineKeyboardButton,
-                           KeyboardButton,
-                           ReplyKeyboardMarkup, )
 
-from database import (get_all, update_chat_stats, GET_ALL_CHATS, UPDATE_CHAT_STATS, DB_CONNECTION,
-                       update, UPDATE_CHAT_INC, UPDATE_CHAT_DEC, UPDATE_CHAT_SUBS, RESET_INC_DEC,
-                       GET_BOT_TOKEN, GET_CHAT_REF_TITLE, UPDATE_CHAT_ID)
+from database import (get_all, DB_CONNECTION, update, GET_BOT_TOKEN, GET_CHAT_REF_TITLE, UPDATE_CHAT_ID)
 
 
 def update_chat_id():
@@ -42,9 +28,9 @@ def update_chat_id():
                             chat_t = _data['my_chat_member']['chat']['title']
                             # print(chat_id)
                             # print(chat_t)
-                            # print(chat_title, chat_t, flush=True)
                             if chat_title == chat_t:
-                                # print('SUPER!!!')
+                                print(chat_title, chat_t, flush=True)
+                                print('SUPER!!!')
                                 update(DB_CONNECTION, UPDATE_CHAT_ID, (chat_id, chat_title))
                         except:
                             pass
@@ -52,6 +38,7 @@ def update_chat_id():
                     print(data)
     except:
         print(traceback.format_exc())
+
 
 while True:
     try:

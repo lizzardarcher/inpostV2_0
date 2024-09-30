@@ -185,7 +185,7 @@ class AdminPageChatCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVie
 
 class AdminPageChatUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     model = Chat
-    form_class = ChatForm
+    form_class = ChatAdminForm
     template_name = 'crud/chat_create.html'
     success_url = '/admin_page'
     success_message = 'Чат успешно обновлён'

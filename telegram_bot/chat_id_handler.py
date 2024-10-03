@@ -32,14 +32,10 @@ def update_chat_id():
                 r = requests.get(f'https://api.telegram.org/bot{token[0]}/getUpdates').text
                 data = json.loads(r)
                 if data['ok'] == True:
-                    # chat_id = data['result'][0]['my_chat_member']['chat']['id']
-                    # print(chat_id)
                     for _data in data['result']:
                         try:
                             chat_id = _data['my_chat_member']['chat']['id']
                             chat_t = _data['my_chat_member']['chat']['title']
-                            # print(chat_id)
-                            # print(chat_t)
                             if chat_title == chat_t:
                                 logger.info(f"[{chat_title}] [{chat_t}]")
                                 logger.info('SUPER!!!')
@@ -57,7 +53,6 @@ while True:
         logger.info('Pending ...')
         update_chat_id()
 
-        # os.system('apachectl -k graceful')
         sleep(10)
     except:
         sleep(10)

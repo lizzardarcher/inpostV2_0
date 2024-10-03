@@ -8,7 +8,6 @@ from time import sleep
 
 
 def update_stats():
-    print('HI')
     day_of_week = datetime.now().weekday()
     update_start = str(datetime.today().time().hour)
     if day_of_week == 0:
@@ -37,16 +36,12 @@ def update_stats():
             total_subs = chat[3]
             neg_subs = chat[4]
             pos_subs = chat[5]
-            # print(chat_type, url, chat_id, total_subs, neg_subs, pos_subs)
 
             if not neg_subs: neg_subs = 0
             if not pos_subs: pos_subs = 0
             r = requests.get(url=url).text
-            # print(r)
             soup = BeautifulSoup(r, 'lxml')
             raw_subscribers = soup.find("div", {"class": "tgme_page_extra"}).text
-            # print(url)
-            # print(raw_subscribers)
             subscribers = ''
             for i in raw_subscribers.split(' '):
                 if chat_type == 'Канал':
@@ -56,7 +51,6 @@ def update_stats():
                     if 'mem' not in i:
                         subscribers += i
             subscribers = int(subscribers)
-            # print(subscribers)
 
             # update total subscribers
             update(DB_CONNECTION, UPDATE_CHAT_SUBS, (subscribers, chat_id))

@@ -82,6 +82,10 @@ class AccountUploadForm(forms.ModelForm):
         }
 
 
+class TelegramAccountForm(forms.Form):
+    phone = forms.CharField(label='Номер телефона', max_length=15)
+
+
 class AccountSMSHandlerForm(forms.ModelForm):
     class Meta:
         model = Account

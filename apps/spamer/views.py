@@ -1,13 +1,18 @@
 from datetime import datetime
 from urllib.request import urlopen
 
+# import asyncio
+# from pyrogram import Client
+
 import requests
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.utils.crypto import get_random_string
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView, View)
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
@@ -15,7 +20,7 @@ from django.core.files.temp import NamedTemporaryFile
 from apps.spamer.models import (Account, Message, Client, AccountLogging, GeneralSettings, Chat, ChannelToSubscribe,
                                 AutoAnsweringTemplate, CommonTextTemplate)
 from apps.spamer.forms import (AccountForm, ChatUploadForm, AccountUploadForm, ChatForm, ChannelToSubscribeForm,
-                               AutoAnsweringTemplateForm, CommonTextTemplateForm)
+                               AutoAnsweringTemplateForm, CommonTextTemplateForm, TelegramAccountForm)
 from apps.middleware.current_user import get_current_user
 from apps.home.utils import get_chat_info
 
@@ -107,6 +112,102 @@ class AccountCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+
+# from threading import Thread
+# from pyrogram import Client
+# from django.shortcuts import render
+#
+#
+# # Your Django View
+# def my_view(request):
+#     # Create a thread for Pyrogram
+#     thread = Thread(target=run_pyrogram)
+#     thread.start()
+#
+#     # ... Handle the request ...
+#     return render(request, 'my_template.html', {'data': '...'})
+#
+#
+# # Define the Pyrogram thread function
+# def run_pyrogram():
+#     # Initialize your Pyrogram client
+#     app = Client("my_bot", api_id=12345, api_hash="your_api_hash")
+#
+#     # Run the Pyrogram event loop
+#     app.run()
+
+# def send_activation_code(account):
+#     """Отправляет код активации на Telegram аккаунт."""
+#     api_id = settings.PYROGRAM_API_ID
+#     api_hash = settings.PYROGRAM_API_HASH
+#     phone_number = account.phone
+#
+#     client = pyrogram.Client(api_id, api_hash)
+#     activation_code = get_random_string(length=6)
+#     account.activation_code = activation_code
+#     account.save()
+#     try:
+#         client.send_code(phone_number)
+#         client.sign_in(phone_number, input('Введите код подтверждения: '))
+#         client.send_message(
+#             'me',
+#             f'Ваш код активации: {activation_code}'
+#         )
+#         client.disconnect()
+#     except Exception as e:
+#         print(f'Ошибка при отправке кода активации: {e}')
+#
+# def activate_account(account):
+#     """Активирует аккаунт Telegram."""
+#     account.is_activated = True
+#     account.activation_code = None
+#     account.save()
+#
+#
+# class TelegramAccountCreateView(View):
+#
+#     template_name = 'spamer/crud/create.html'
+#     form_class = TelegramAccountForm
+#
+#     def get(self, request):
+#         form = self.form_class()
+#         return render(request, self.template_name, {'form': form})
+#
+#     def post(self, request):
+#         form = self.form_class(request.POST)
+#         if form.is_valid():
+#             phone_number = form.cleaned_data['phone_number']
+#             user = request.user
+#             account, created = Account.objects.get_or_create(
+#                 phone=phone_number,
+#                 user=user
+#             )
+#             if created:
+#                 send_activation_code(account)
+#                 messages.success(request, 'Код активации отправлен на ваш Telegram.')
+#                 return redirect('telegram_activation_sent')
+#             else:
+#                 if account.is_activated:
+#                     messages.success(request, 'Этот аккаунт Telegram уже активирован.')
+#                     return redirect('accs')
+#                 else:
+#                     messages.warning(request, 'Аккаунт не активирован. Проверьте Telegram для получения кода активации.')
+#                     return redirect('telegram_account_create')
+#         return render(request, self.template_name, {'form': form})
+#
+# class TelegramAccountActivateView(View):
+#     template_name = 'spamer/crud/create.html'
+#
+#     def get(self, request, code):
+#         try:
+#             account = Account.objects.get(activation_code=code)
+#             activate_account(account)
+#             messages.success(request, 'Аккаунт Telegram успешно активирован!')
+#             return redirect('profile')
+#         except Account.DoesNotExist:
+#             messages.error(request, 'Неверный код активации.')
+#             return redirect('telegram_account_create')
 
 
 class AccountUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):

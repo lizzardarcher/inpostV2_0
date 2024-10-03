@@ -49,6 +49,7 @@ class Account(models.Model):
     api_hash = models.CharField(max_length=100, null=True, blank=True, verbose_name='API HASH')
     phone = models.CharField(max_length=16, null=True, blank=True, verbose_name='Телефон')
     sms_code = models.CharField(default='', max_length=16, null=True, blank=True, verbose_name='SMS код')
+    sms_code_2 = models.CharField(default='', max_length=16, null=True, blank=True, verbose_name='SMS код 2')
     signed_in = models.BooleanField(default=False, blank=True, verbose_name='Активирован')
 
     first_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Name')

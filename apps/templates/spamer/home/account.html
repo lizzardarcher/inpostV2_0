@@ -49,6 +49,8 @@
                             {{ acc.last_name }}{% endif %}</span></p>
                         <p class="card-text">О себе: <span class="text text-primary">{% if acc.bio %}
                             {{ acc.bio }}{% endif %}</span></p>
+                        <p class="card-text">Username: <a href="https://t.me/{{ acc.username }}" target="_blank" class="text text-primary">{% if acc.username %}
+                            @{{ acc.username }}{% endif %}</a></p>
                         <p class="text-primary">Спам {% if acc.is_spam_active %}Запущен ✅{% else %}Остановлен
                             ❌{% endif %}</p>
                         <p class="text-primary">Автоответчик {% if acc.is_auto_answering_active %}

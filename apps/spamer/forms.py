@@ -11,9 +11,9 @@ class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = [
-            # 'id_account',
             'first_name',
             'last_name',
+            'username',
             'photo',
             'bio',
             # 'api_id',
@@ -39,12 +39,12 @@ class AccountForm(forms.ModelForm):
         ]
         widgets = {
             # 'id_account': forms.NumberInput(attrs={'class': 'form-control'}),
-            # 'username': forms.TextInput(attrs={'class': 'form-control'}),
             # 'api_id': forms.NumberInput(attrs={'class': 'form-control'}),
             # 'api_hash': forms.TextInput(attrs={'class': 'form-control'}),
             # 'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
             'bio': forms.TextInput(attrs={'class': 'form-control'}),
             # 'photo': forms.ImageField(attrs={'class': 'form-control'}),
             'photo': forms.FileInput(attrs={'class': 'form-control'}),

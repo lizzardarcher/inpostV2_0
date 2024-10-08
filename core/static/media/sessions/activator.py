@@ -94,11 +94,15 @@ while True:
                         client = Client(name=file.split('.')[0])
                         first_name = account.first_name
                         last_name = account.last_name
+                        username = account.username
                         bio = account.bio
                         photo = f'/var/www/html/inpost/core/static/media/{account.photo}'
                         with client:
                             client.update_profile(first_name=first_name, last_name=last_name, bio=bio)
                             client.set_profile_photo(photo=open(photo, 'rb'))
+                            try:
+                                client.set_username(username)
+                            except: ...
                         acc.update(is_change_needed=False)
                         break
 

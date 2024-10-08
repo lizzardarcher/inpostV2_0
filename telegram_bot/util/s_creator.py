@@ -1,12 +1,8 @@
 import asyncio
 import os
 import random
+import sys
 from datetime import datetime
-
-import django
-os.environ['DJANGO_SETTINGS_MODULE'] = 'core.settings'
-os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
-django.setup()
 
 from django.conf import settings
 from pyrogram import Client, errors
@@ -85,43 +81,40 @@ client_parameters = [
 
 # Создание и активация сессий
 async def create_session_for_chat():
-    while True:
-        accounts = Account.objects.filter(is_activated=False)
-        for account in accounts:
-            phone_number = account.phone
-            if phone_number:
-                session_name = f"session_{str(datetime.now().strftime('%Y%m%d_%H%M'))}_for_chat"
-                params = random.choice(client_parameters)
-                try:
-                    client = Client(session_name, api_id=settings.API_ID, api_hash=settings.API_HASH,
-                                    phone_number=phone_number,
-                                    device_model=params['device_model'],
-                                    app_version=params['app_version'],
-                                    system_version=params['system_version'],
-                                    lang_code=params['lang_code'])
-                    await client.connect()
-                    code = await client.send_code(phone_number)
-                    phone_code_hash = code.phone_code_hash
-                    for i in range(10):
-                        sms_code = account.sms_code
-                        if sms_code:
-                            await client.sign_in(phone_number=phone_number,
-                                                 phone_code_hash=phone_code_hash,
-                                                 phone_code=sms_code)
-                            account.session = f'/var/www/html/inpost/core/static/media/sessions/{session_name}.session'
-                            account.save()
-                            await client.disconnect()
-                            break
-                        await asyncio.sleep(5)
-                    print(f"Сессия {session_name} успешно активирована!")
-                except errors.PhoneNumberInvalid:
-                    print(f"Неверный номер телефона для сессии {session_name}.")
-                except errors.PhoneCodeInvalid:
-                    print(f"Неверный код подтверждения для сессии {session_name}.")
-                except errors.PhoneNumberBanned:
-                    print(f"Номер телефона забанен для сессии {session_name}.")
-                except Exception as e:
-                    print(f"Ошибка при активации сессии {session_name}: {e}")
+
+    phone_number = Account.objects.filter(is_activated=False).last().phone
+
+    chat = 'for_chat'
+
+    session_name = f"session_{str(datetime.now().strftime('%Y%m%d_%H%M'))}_{chat}"
+    params = random.choice(client_parameters)
+    try:
+
+        client = Client(session_name, api_id=settings.API_ID, api_hash=settings.API_HASH,
+                        phone_number=phone_number,
+                        device_model=params['device_model'],
+                        app_version=params['app_version'],
+                        system_version=params['system_version'],
+                        lang_code=params['lang_code'])
+        await client.connect()
+        code = await client.send_code(phone_number)
+        phone_code_hash = code.phone_code_hash
+        await client.sign_in(phone_number=phone_number,
+                             phone_code_hash=phone_code_hash,
+                             phone_code='sms_code')
+
+        phone_code_hash = code.phone_code_hash
+        await client.disconnect()
+        await asyncio.sleep(5)
+        print(f"Сессия {session_name} успешно активирована!")
+    except errors.PhoneNumberInvalid:
+        print(f"Неверный номер телефона для сессии {session_name}.")
+    except errors.PhoneCodeInvalid:
+        print(f"Неверный код подтверждения для сессии {session_name}.")
+    except errors.PhoneNumberBanned:
+        print(f"Номер телефона забанен для сессии {session_name}.")
+    except Exception as e:
+        print(f"Ошибка при активации сессии {session_name}: {e}")
 
 
 # Основная функция

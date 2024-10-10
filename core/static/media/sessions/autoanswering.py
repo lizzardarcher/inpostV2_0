@@ -56,25 +56,25 @@ async def main():
                 * Ответ пользователю
                 * Создание объекта клиента
             """
-            try:
-                if tg_cli.first_name == 'Admin66':
-                    await client.send_message(message.chat.id, '[DEBUG] [AUTOANSWERING]')
-            except:
-                pass
-            if not tg_cli:
-                logger.info(f'[{message.from_user.id}] [NOT CLIENT] [AUTOANSWERING...]')
-                text = account.auto_answering_text_ref.text
-                if not text:
-                    text = GeneralSettings.objects.get(pk=1).general_auto_answering
-                await asyncio.sleep(4.1)
-                await client.send_message(message.chat.id, text)
-                user_id = message.from_user.id
-                username = message.from_user.username
-                first_name = message.from_user.first_name
-                if not username: username = str(first_name)
-                last_name = message.from_user.last_name
-                Tg_client.objects.create(user_id=user_id, username=username, first_name=first_name, last_name=last_name,
-                                         account=account)
+            # try:
+            #     if tg_cli.first_name == 'Admin66':
+            #         await client.send_message(message.chat.id, '[DEBUG] [AUTOANSWERING]')
+            # except:
+            #     pass
+            # if not tg_cli:
+            logger.info(f'[{message.from_user.id}] [NOT CLIENT] [AUTOANSWERING...]')
+            text = account.auto_answering_text_ref.text
+            if not text:
+                text = GeneralSettings.objects.get(pk=1).general_auto_answering
+            await asyncio.sleep(4.1)
+            await client.send_message(message.chat.id, text)
+            user_id = message.from_user.id
+            username = message.from_user.username
+            first_name = message.from_user.first_name
+            if not username: username = str(first_name)
+            last_name = message.from_user.last_name
+            Tg_client.objects.create(user_id=user_id, username=username, first_name=first_name, last_name=last_name,
+                                     account=account)
         logger.info(f'[{Account.objects.filter(session_aa=f"sessions/{app.name}.session").last()}] [{app.name}] [started]')
 
     """ Активируем клиенты pyrogram с помощью compose() """

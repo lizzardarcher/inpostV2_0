@@ -197,7 +197,7 @@ class Client(models.Model):
         db_table = 'client'
         verbose_name = 'Клиент'
         verbose_name_plural = 'Клиенты'
-        unique_together = (('user_id', 'account'),)
+        # unique_together = (('user_id', 'account'),)
 
 
 class MasterAccount(models.Model):

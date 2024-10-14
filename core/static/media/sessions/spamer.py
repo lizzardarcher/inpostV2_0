@@ -198,7 +198,7 @@ async def post_to_chats(acc_id):
                                                           datetime=datetime.datetime.now(), chat=chat)
                         else:
                             AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
-                                                          message=f'UNKNOWN: {traceback.format_exc()}',
+                                                          message=f'UNKNOWN: {e}',
                                                           datetime=datetime.datetime.now(), chat=chat)
             await asyncio.sleep(0.01)
             await client.stop()
@@ -217,7 +217,10 @@ async def post_to_chats(acc_id):
                                               message='401 AUTH_KEY_UNREGISTERED',
                                               datetime=datetime.datetime.now(), chat=None)
                 break
-
+            else:
+                AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
+                                              message=f'{e}',
+                                              datetime=datetime.datetime.now(), chat=None)
 
 if __name__ == '__main__':
 

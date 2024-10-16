@@ -46,9 +46,9 @@ while True:
                 #  Если аккаунт ещё не активирован
                 if account.session.name.split('/')[-1] == file:
 
-                    # os.system('systemctl stop spamer.service')
+                    os.system('systemctl stop testspamer.service')
                     # os.system('systemctl stop autoanswering.service')
-                    # sleep(3)
+                    sleep(1)
                     if not account.is_activated:
 
                         session_for_chat = file.replace('.', '_for_chat.')
@@ -108,7 +108,9 @@ while True:
 
                     # sleep(3)
                     # os.system('systemctl start spamer.service')
-                    # sleep(3)
+                    os.system('systemctl start testspamer.service')
+
+                    sleep(1)
                     # os.system('systemctl start autoanswering.service')
 
                     sleep(5)

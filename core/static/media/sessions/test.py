@@ -269,14 +269,15 @@ async def main():
             """
             :param acc_id: id of the account
             """
-            print(message.sticker.file_id)
             print(message.sticker.file_unique_id)
-            print(str(message.sticker.file_unique_id) == 'AgADazMAAoiGyUo')
-            if message.sticker.file_unique_id ==         'AgADazMAAoiGyUo':
+            if message.sticker.file_unique_id == 'AgADazMAAoiGyUo':
                 killer = GracefulKiller()
                 while not killer.kill_now:
                     while True:
                         try:
+
+                            # Рандомная задержка старта спама от 1 до 30 сек.
+                            await asyncio.sleep(random.randint(a=1, b=30))
 
                             # Получаем акк по id
                             acc = Account.objects.filter(session=f'sessions/{client.name}.session').last()
@@ -441,11 +442,6 @@ async def main():
                                                                   datetime=datetime.datetime.now(), chat=None)
                         except KeyboardInterrupt:
                             break
-
-    # for app in apps:
-    #     await app.start()
-    #     await app.send_sticker('me', 'CAACAgIAAxkBAAEJOtBnD8vvXfvi4FZb_dPwiGZNJeVHsAACgzIAAgJ5yUqH1l_r7VRqsjYE')
-    #     await app.stop()
 
     await compose(apps)
 

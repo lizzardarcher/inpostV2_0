@@ -73,11 +73,9 @@ class Account(models.Model):
     auto_answering_text = models.TextField(max_length=4000, null=True, blank=False, verbose_name='Текст автоответчика')
 
     common_text_ref = models.ForeignKey(to='CommonTextTemplate', on_delete=models.CASCADE, related_name='commref',
-                                        default=None, null=True,
-                                        blank=True, verbose_name='Текст Рассылки')
+                                        default=None, null=True, blank=True, verbose_name='Текст Рассылки')
     auto_answering_text_ref = models.ForeignKey(to='AutoAnsweringTemplate', on_delete=models.CASCADE,
-                                                related_name='autoref',
-                                                default=None, null=True, blank=True, verbose_name='Текст автоответчика')
+                                                related_name='autoref', default=None, null=True, blank=True, verbose_name='Текст автоответчика')
 
     is_auto_answering_active = models.BooleanField(default=False, null=True, blank=True,
                                                    verbose_name='Автоответчик вкл/выкл')

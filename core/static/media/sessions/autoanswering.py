@@ -3,6 +3,7 @@ import sqlite3
 import sys
 import logging
 
+
 from django.conf import settings
 from pyrogram import Client, compose, filters
 import os
@@ -56,12 +57,7 @@ async def main():
                 * Ответ пользователю
                 * Создание объекта клиента
             """
-            # try:
-            #     if tg_cli.first_name == 'Admin66':
-            #         await client.send_message(message.chat.id, '[DEBUG] [AUTOANSWERING]')
-            # except:
-            #     pass
-            # if not tg_cli:
+
             logger.info(f'[{message.from_user.id}] [NOT CLIENT] [AUTOANSWERING...]')
             text = account.auto_answering_text_ref.text
             if not text:

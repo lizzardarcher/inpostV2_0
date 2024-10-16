@@ -128,6 +128,7 @@ class PostScheduleForm(forms.ModelForm):
         post_set = Post.objects.filter(user_id=current_user.get_current_user_id())
         self.fields['post'].queryset = post_set
 
+
 class PostScheduleAdminForm(forms.ModelForm):
     class Meta:
         model = PostSchedule
@@ -144,6 +145,7 @@ class PostScheduleAdminForm(forms.ModelForm):
     #     super(PostScheduleAdminForm, self).__init__(*args, **kwargs)
     #     post_set = Post.objects.filter(user_id=current_user.get_current_user_id())
     #     self.fields['post'].queryset = post_set
+
 
 class PostScheduleAdminUserForm(forms.ModelForm):
     class Meta:

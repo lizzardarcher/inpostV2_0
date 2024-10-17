@@ -11,6 +11,7 @@ import sys
 from pyrogram import Client, compose, filters, idle
 from pyrogram.enums import ParseMode
 import django
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'core.settings'
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 django.setup()
@@ -21,7 +22,7 @@ from apps.spamer.models import Account, AccountLogging, Message, Chat
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     format='%(asctime)s %(levelname) -8s %(message)s',
-    level=logging.INFO,
+    level=logging.WARNING,
     datefmt='%Y.%m.%d %I:%M:%S',
     handlers=[
         logging.StreamHandler(stream=sys.stderr)
@@ -30,14 +31,16 @@ logging.basicConfig(
 
 import signal
 
-class GracefulKiller:
-  kill_now = False
-  def __init__(self):
-    signal.signal(signal.SIGINT, self.exit_gracefully)
-    signal.signal(signal.SIGTERM, self.exit_gracefully)
 
-  def exit_gracefully(self, signum, frame):
-    self.kill_now = True
+class GracefulKiller:
+    kill_now = False
+
+    def __init__(self):
+        signal.signal(signal.SIGINT, self.exit_gracefully)
+        signal.signal(signal.SIGTERM, self.exit_gracefully)
+
+    def exit_gracefully(self, signum, frame):
+        self.kill_now = True
 
 
 def random_string(letter_count, digit_count):
@@ -55,7 +58,7 @@ def random_string(letter_count, digit_count):
     return f'\n||ID: {final_string}||'
 
 
-async def post_to_chats(client):
+async def _post_to_chats(client):
     """
     :param acc_id: id of the account
     """
@@ -220,6 +223,23 @@ async def post_to_chats(client):
                                               datetime=datetime.datetime.now(), chat=None)
 
 
+async def starter():
+
+    await asyncio.sleep(9.1)
+    accounts = Account.objects.filter(status=True, is_auto_answering_active=True, is_spam_active=True)
+    for acc in accounts:
+        print(acc.id_account)
+    master_app = Client('26346875_chat')
+    await master_app.start()
+
+    for acc in accounts:
+        try:
+            await master_app.send_sticker(acc.username, 'CAACAgIAAxkBAAEJOwJnD88-dJLENrImyR3xeEnyeJaGvQACazMAAoiGyUr_5wXVwkX0ozYE')
+            await asyncio.sleep(0.5)
+        except:
+            print(traceback.format_exc())
+    await master_app.stop()
+
 async def main():
     """ Автоответчик """
 
@@ -229,7 +249,7 @@ async def main():
     #     status=True, is_auto_answering_active=True, session__isnull=False).order_by('first_name')]
 
     apps = []
-    accounts = Account.objects.filter(status=True, is_auto_answering_active=True)
+    accounts = Account.objects.filter(status=True, is_auto_answering_active=True, is_spam_active=True)
     for account in accounts:
         if account.session:
             apps.append(Client(account.session.name.split('/')[-1].split('.')[0]))
@@ -267,9 +287,11 @@ async def main():
         @app.on_message(filters.sticker)
         async def post_to_chats(client, message):
             """
-            :param acc_id: id of the account
+            :param message:
+            :param client:
             """
             print(message.sticker.file_unique_id)
+            print(message.sticker.file_unique_id=='AgADazMAAoiGyUo')
             if message.sticker.file_unique_id == 'AgADazMAAoiGyUo':
                 killer = GracefulKiller()
                 while not killer.kill_now:
@@ -374,49 +396,66 @@ async def main():
                                                                                                  is_change_needed=False)
                                                 AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                                                               message='401 USER_DEACTIVATED_BAN',
-                                                                              datetime=datetime.datetime.now(), chat=chat)
+                                                                              datetime=datetime.datetime.now(),
+                                                                              chat=chat)
                                             elif '401 AUTH_KEY_UNREGISTERED' in traceback.format_exc():
                                                 Account.objects.filter(id_account=acc_id).update(status=False,
                                                                                                  is_change_needed=False)
                                                 AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                                                               message='401 AUTH_KEY_UNREGISTERED',
-                                                                              datetime=datetime.datetime.now(), chat=None)
+                                                                              datetime=datetime.datetime.now(),
+                                                                              chat=None)
 
                                             elif '400 USER_BANNED_IN_CHANNEL' in traceback.format_exc():
-                                                AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                AccountLogging.objects.create(log_level='Warning', account=acc,
+                                                                              user=user,
                                                                               message='400 USER_BANNED_IN_CHANNEL',
-                                                                              datetime=datetime.datetime.now(), chat=chat)
+                                                                              datetime=datetime.datetime.now(),
+                                                                              chat=chat)
                                                 chat.is_user_banned.add(Account.objects.get(id_account=acc_id))
                                             elif '403 CHAT_WRITE_FORBIDDEN' in traceback.format_exc():
-                                                AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                AccountLogging.objects.create(log_level='Warning', account=acc,
+                                                                              user=user,
                                                                               message='403 CHAT_WRITE_FORBIDDEN',
-                                                                              datetime=datetime.datetime.now(), chat=chat)
+                                                                              datetime=datetime.datetime.now(),
+                                                                              chat=chat)
                                             elif '403 CHAT_SEND_MEDIA_FORBIDDEN' in traceback.format_exc():
-                                                AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                AccountLogging.objects.create(log_level='Warning', account=acc,
+                                                                              user=user,
                                                                               message='403 CHAT_SEND_MEDIA_FORBIDDEN',
-                                                                              datetime=datetime.datetime.now(), chat=chat)
+                                                                              datetime=datetime.datetime.now(),
+                                                                              chat=chat)
                                             elif '420 SLOWMODE_WAIT_X' in traceback.format_exc():
-                                                AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                AccountLogging.objects.create(log_level='Warning', account=acc,
+                                                                              user=user,
                                                                               message='420 SLOWMODE_WAIT_X',
-                                                                              datetime=datetime.datetime.now(), chat=chat)
+                                                                              datetime=datetime.datetime.now(),
+                                                                              chat=chat)
                                             elif '403 CHAT_SEND_PLAIN_FORBIDDEN' in traceback.format_exc():
-                                                AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                AccountLogging.objects.create(log_level='Warning', account=acc,
+                                                                              user=user,
                                                                               message='403 CHAT_SEND_PLAIN_FORBIDDEN',
-                                                                              datetime=datetime.datetime.now(), chat=chat)
+                                                                              datetime=datetime.datetime.now(),
+                                                                              chat=chat)
                                             elif '400 TOPIC_CLOSED' in traceback.format_exc():
-                                                AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                AccountLogging.objects.create(log_level='Warning', account=acc,
+                                                                              user=user,
                                                                               message='400 TOPIC_CLOSED',
-                                                                              datetime=datetime.datetime.now(), chat=chat)
+                                                                              datetime=datetime.datetime.now(),
+                                                                              chat=chat)
                                             elif '420 FLOOD_WAIT_X' in traceback.format_exc():
                                                 sec = traceback.format_exc().split('A wait of')[-1].split('seconds')[0]
                                                 msg = f'Wait {sec} seconds'
-                                                AccountLogging.objects.create(log_level='Warning', account=acc, user=user,
+                                                AccountLogging.objects.create(log_level='Warning', account=acc,
+                                                                              user=user,
                                                                               message=msg,
-                                                                              datetime=datetime.datetime.now(), chat=chat)
+                                                                              datetime=datetime.datetime.now(),
+                                                                              chat=chat)
                                             else:
                                                 AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                                                               message=f'UNKNOWN: {e}',
-                                                                              datetime=datetime.datetime.now(), chat=chat)
+                                                                              datetime=datetime.datetime.now(),
+                                                                              chat=chat)
                                 await asyncio.sleep(0.01)
 
                                 # await client.stop()
@@ -425,13 +464,15 @@ async def main():
                             except Exception as e:
                                 logger.error(traceback.format_exc())
                                 if '401 USER_DEACTIVATED_BAN' in traceback.format_exc():
-                                    Account.objects.filter(id_account=acc_id).update(status=False, is_change_needed=False)
+                                    Account.objects.filter(id_account=acc_id).update(status=False,
+                                                                                     is_change_needed=False)
                                     AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                                                   message='401 USER_DEACTIVATED_BAN',
                                                                   datetime=datetime.datetime.now(), chat=None)
                                     break
                                 elif '401 AUTH_KEY_UNREGISTERED' in traceback.format_exc():
-                                    Account.objects.filter(id_account=acc_id).update(status=False, is_change_needed=False)
+                                    Account.objects.filter(id_account=acc_id).update(status=False,
+                                                                                     is_change_needed=False)
                                     AccountLogging.objects.create(log_level='Fatal', account=acc, user=user,
                                                                   message='401 AUTH_KEY_UNREGISTERED',
                                                                   datetime=datetime.datetime.now(), chat=None)
@@ -448,11 +489,11 @@ async def main():
 
 if __name__ == '__main__':
     try:
-
-        asyncio.run(main())
+        loop = asyncio.get_event_loop()
+        loop.create_task(main())
+        loop.create_task(starter())
+        loop.run_forever()
     except sqlite3.OperationalError as e:
         print(e)
     except KeyboardInterrupt:
         sys.exit(0)
-
-

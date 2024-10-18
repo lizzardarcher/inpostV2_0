@@ -1,3 +1,4 @@
+import datetime
 import os
 import traceback
 from time import sleep
@@ -10,7 +11,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'core.settings'
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 django.setup()
 
-from apps.spamer.models import Account, GeneralSettings
+from apps.spamer.models import Account, GeneralSettings, AccountLogging
 
 directory_to_list = '/var/www/html/inpost/core/static/media/sessions'
 
@@ -46,7 +47,7 @@ while True:
                 #  Если аккаунт ещё не активирован
                 if account.session.name.split('/')[-1] == file:
 
-                    os.system('systemctl stop testspamer.service')
+                    os.system('systemctl stop spamerv2.service ')
                     # os.system('systemctl stop autoanswering.service')
                     sleep(1)
                     if not account.is_activated:
@@ -106,18 +107,25 @@ while True:
                         acc.update(is_change_needed=False)
                         break
 
-                    # sleep(3)
-                    # os.system('systemctl start spamer.service')
-                    os.system('systemctl start testspamer.service')
-
+                    os.system('systemctl start spamerv2.service ')
                     sleep(1)
+                    # os.system('systemctl start testspamer.service')
                     # os.system('systemctl start autoanswering.service')
-
-                    sleep(5)
                     # todo GeneralSettings handler
                     # GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
         except:
+            if '[401 AUTH_KEY_UNREGISTERED]' in traceback.format_exc():
+                acc.update(is_activated=True, is_change_needed=False, status=False)
+                AccountLogging.objects.create(log_level='Fatal', account=acc.last(), user=acc.last().user,
+                                              message='[401 AUTH_KEY_UNREGISTERED] необходимо создать сессию заново',
+                                              datetime=datetime.datetime.now())
+            else:
+                acc.update(is_activated=True, is_change_needed=False, status=False)
+                AccountLogging.objects.create(log_level='Fatal', account=acc.last(), user=acc.last().user,
+                                              message=f'{traceback.format_exc()}',
+                                              datetime=datetime.datetime.now())
             print(traceback.format_exc())
         # todo GeneralSettings handler
         # GeneralSettings.objects.filter(id=1).update(is_reload_spam_needed=True)
     sleep(5)
+

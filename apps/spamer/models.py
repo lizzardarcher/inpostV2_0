@@ -63,19 +63,19 @@ class Account(models.Model):
     report = models.TextField(max_length=1000000, null=True, blank=True, verbose_name='Отчёт о состоянии')
     session = models.FileField(upload_to='sessions', max_length=1000, null=True, blank=False, verbose_name='Сессия для рассылки',
                                validators=[validators.FileExtensionValidator(['session'])])
-    session_aa = models.FileField(upload_to='sessions', max_length=1000, null=True, blank=False, verbose_name='Сессия для автоответчика',
+    session_aa = models.FileField(upload_to='sessions', max_length=1000, null=True, blank=True, verbose_name='Сессия для автоответчика',
                                validators=[validators.FileExtensionValidator(['session'])])
     session_for_chat = models.CharField(max_length=1000, null=True, blank=True, verbose_name='Сессия для чатов')
     session_for_lk = models.CharField(max_length=1000, null=True, blank=True, verbose_name='Сессия для лс')
 
-    common_text = models.TextField(max_length=4000, null=True, blank=False, verbose_name='Текст Рассылки')
+    common_text = models.TextField(max_length=4000, null=True, blank=True, verbose_name='Текст Рассылки')
     media = models.FileField(null=True, blank=True, verbose_name='Image')
-    auto_answering_text = models.TextField(max_length=4000, null=True, blank=False, verbose_name='Текст автоответчика')
+    auto_answering_text = models.TextField(max_length=4000, null=True, blank=True, verbose_name='Текст автоответчика')
 
     common_text_ref = models.ForeignKey(to='CommonTextTemplate', on_delete=models.CASCADE, related_name='commref',
-                                        default=None, null=True, blank=True, verbose_name='Текст Рассылки')
+                                        default=None, null=True, blank=False, verbose_name='Текст Рассылки')
     auto_answering_text_ref = models.ForeignKey(to='AutoAnsweringTemplate', on_delete=models.CASCADE,
-                                                related_name='autoref', default=None, null=True, blank=True, verbose_name='Текст автоответчика')
+                                                related_name='autoref', default=None, null=True, blank=False, verbose_name='Текст автоответчика')
 
     is_auto_answering_active = models.BooleanField(default=False, null=True, blank=True,
                                                    verbose_name='Автоответчик вкл/выкл')
